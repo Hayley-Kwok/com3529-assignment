@@ -20,8 +20,8 @@ public class TestRequirementTest {
         VariableNode<?> v2 = new VariableNode<Double>("v2");
         VariableNode<?> v3 = new VariableNode<Long>("v3");
         VariableNode<?> v4 = new VariableNode<Float>("v4");
-        ComparisonNode leftNode = new ComparisonNode(v1, ComparisonRelation.EqualsEquals, v2);
-        ComparisonNode rightNode = new ComparisonNode(v3,ComparisonRelation.EqualsEquals, v4);
+        ConditionNode leftNode = new ConditionNode(v1, ComparisonRelation.EqualsEquals, v2);
+        ConditionNode rightNode = new ConditionNode(v3,ComparisonRelation.EqualsEquals, v4);
 
         HashSet<VariableNode<?>>expectedVariables = new HashSet<>(Arrays.asList(v1,v2,v3,v4));
 
@@ -39,15 +39,15 @@ public class TestRequirementTest {
         VariableNode<?> v3 = new VariableNode<Long>("v3");
         VariableNode<?> v4 = new VariableNode<Float>("v4");
         VariableNode<?> v5 = new VariableNode<Float>("v5");
-        ComparisonNode leftNode = new ComparisonNode(v1, ComparisonRelation.EqualsEquals, v2);
-        ArithmeticNode arithmeticNode = new ArithmeticNode(v4, ArithmeticRelation.Add, v5);
-        ComparisonNode rightNode = new ComparisonNode(v3, ComparisonRelation.LargerOrEqualsTo, arithmeticNode);
+        ConditionNode leftNode = new ConditionNode(v1, ComparisonRelation.EqualsEquals, v2);
+        ArithmeticNode<Integer> arithmeticNode = new ArithmeticNode<>(v4, ArithmeticRelation.Add, v5);
+        ConditionNode rightNode = new ConditionNode(v3, ComparisonRelation.LargerOrEqualsTo, arithmeticNode);
 
-        HashSet<ConditionNode<?>> expectedConditions = new HashSet<>(Arrays.asList(leftNode,arithmeticNode, rightNode));
+        HashSet<ConditionNode> expectedConditions = new HashSet<>(Arrays.asList(leftNode, rightNode));
 
         TestRequirements objUnderTest = new TestRequirements(new AndNode(leftNode, rightNode));
 
-        HashSet<ConditionNode<?>> actualConditions = objUnderTest.getConditions();
+        HashSet<ConditionNode> actualConditions = objUnderTest.getConditions();
         assertEquals(expectedConditions, actualConditions);
     }
 }

@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 public class TestRequirements {
     private final SyntaxNode root;
     private final HashSet<VariableNode<?>> variables = new HashSet<>();
-    private final HashSet<ConditionNode<?>> conditions = new HashSet<>();
+    private final HashSet<ConditionNode> conditions = new HashSet<>();
 
     public TestRequirements(SyntaxNode root) {
         this.root = root;
@@ -20,7 +20,7 @@ public class TestRequirements {
 
     private void addConditionNodeToConditions(SyntaxNode node) {
         if (node instanceof ConditionNode) {
-            conditions.add((ConditionNode<?>) node);
+            conditions.add((ConditionNode) node);
         }
     }
 
@@ -44,7 +44,7 @@ public class TestRequirements {
         return variables;
     }
 
-    public HashSet<ConditionNode<?>> getConditions() {
+    public HashSet<ConditionNode> getConditions() {
         return conditions;
     }
 }
