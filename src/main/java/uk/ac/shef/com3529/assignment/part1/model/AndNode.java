@@ -16,6 +16,6 @@ public class AndNode extends BinaryRelatedNode<BinaryRelation>{
             return result;
         }
 
-        return ((BinaryRelatedNode)leftNode).getResult() && ((BinaryRelatedNode)rightNode).getResult();
+        return ((BinaryRelatedNode<?>)leftNode).getResult() && ((BinaryRelatedNode<?>)rightNode).getResult();
     }
 }
