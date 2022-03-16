@@ -9,10 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrNodeTest {
     @ParameterizedTest
-    @CsvSource({"true, true, true", "true, true, false"})
-    public void testGetResultWithOverrodeResult(boolean leftNodeResult, boolean rightNodeResult, boolean overrodeResult){
-        OrNode objUnderTest = new OrNode(new VariableNode<>("condition1", leftNodeResult),
-                new VariableNode<>("condition2", rightNodeResult));
+    @CsvSource({"1, 1, true", "1, 1, false"})
+    public void testGetResultWithOverrodeResult(int leftNodeValue, int rightNodeValue, boolean overrodeResult){
+        OrNode objUnderTest = new OrNode(new VariableNode<>("condition1", leftNodeValue),
+                new VariableNode<>("condition2", rightNodeValue));
 
         objUnderTest.setResult(overrodeResult);
 

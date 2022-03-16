@@ -2,15 +2,19 @@ package uk.ac.shef.com3529.assignment.part1.model;
 
 import uk.ac.shef.com3529.assignment.part1.model.enums.ArithmeticRelation;
 
-public class ArithmeticNode extends ConditionNode<ArithmeticRelation>{
+public class ArithmeticNode<T extends Number> extends SyntaxNode {
+    protected ArithmeticRelation relation;
+    protected T result;
+
     public ArithmeticNode(SyntaxNode leftNode, ArithmeticRelation relation, SyntaxNode rightNode) {
-        super(leftNode, relation, rightNode);
+        this.leftNode = leftNode;
+        this.relation = relation;
+        this.rightNode = rightNode;
     }
 
     //TODO implement this
-    @Override
-    public boolean getResult() {
-        return false;
+    public T getResult() {
+        return result;
     }
 
 

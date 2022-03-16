@@ -3,7 +3,7 @@ package uk.ac.shef.com3529.assignment.part1.model;
 import java.util.Objects;
 
 //T would be the type of the variable (identifier)
-public class VariableNode<T> extends SyntaxNode {
+public class VariableNode<T extends Number> extends SyntaxNode {
     protected String name;
     protected T value;
 
@@ -28,4 +28,5 @@ public class VariableNode<T> extends SyntaxNode {
     public int hashCode() {
         return Objects.hash(name, value);
     }
+
 }
