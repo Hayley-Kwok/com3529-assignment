@@ -6,10 +6,8 @@ import java.util.AbstractMap;
     This node represents the binary relationship of two syntax nodes.
  */
 
-public abstract class BinaryRelatedNode<T> implements SyntaxNode {
-    protected SyntaxNode leftNode;
+public abstract class BinaryRelatedNode<T> extends SyntaxNode {
     protected T relation;
-    protected SyntaxNode rightNode;
     protected boolean result;
     protected boolean resultOverrode;
 
