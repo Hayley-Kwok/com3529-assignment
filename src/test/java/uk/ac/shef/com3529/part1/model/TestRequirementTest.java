@@ -40,7 +40,7 @@ public class TestRequirementTest {
         VariableNode<?> v4 = new VariableNode<Float>("v4");
         VariableNode<?> v5 = new VariableNode<Float>("v5");
         ConditionNode leftNode = new ConditionNode(v1, ComparisonRelation.EqualsEquals, v2);
-        ArithmeticNode<Integer> arithmeticNode = new ArithmeticNode<>(v4, ArithmeticRelation.Add, v5);
+        ArithmeticNode arithmeticNode = new ArithmeticNode(v4, ArithmeticRelation.Add, v5);
         ConditionNode rightNode = new ConditionNode(v3, ComparisonRelation.LargerOrEqualsTo, arithmeticNode);
 
         HashSet<ConditionNode> expectedConditions = new HashSet<>(Arrays.asList(leftNode, rightNode));

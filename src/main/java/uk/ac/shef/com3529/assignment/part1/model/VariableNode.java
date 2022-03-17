@@ -16,6 +16,10 @@ public class VariableNode<T extends Number> extends SyntaxNode {
         this.value = value;
     }
 
+    public T getValue() {
+        return value;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

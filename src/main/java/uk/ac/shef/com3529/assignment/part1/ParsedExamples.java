@@ -18,7 +18,7 @@ public class ParsedExamples {
         SyntaxNode side3 = new VariableNode<Integer>("side3");
 
         SyntaxNode c1 = new ConditionNode
-                (new ArithmeticNode<Integer>(side1, ArithmeticRelation.Add, side2),
+                (new ArithmeticNode(side1, ArithmeticRelation.Add, side2),
                     ComparisonRelation.LargerThan,
                     side3);
 
