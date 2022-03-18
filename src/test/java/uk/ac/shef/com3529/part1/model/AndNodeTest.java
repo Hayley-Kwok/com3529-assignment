@@ -14,7 +14,7 @@ public class AndNodeTest {
 
     @ParameterizedTest
     @CsvSource({"1, 2, true", "1, 2, false"})
-    public void testGetResultWithOverrodeResult(double leftNodeVal, double rightNodeVal, boolean overrodeResult){
+    public void testGetResultWithOverrodeResult(double leftNodeVal, double rightNodeVal, boolean overrodeResult) {
         AndNode objUnderTest = new AndNode(new VariableNode<>("condition1", leftNodeVal),
                 new VariableNode<>("condition2", rightNodeVal));
 
@@ -23,20 +23,19 @@ public class AndNodeTest {
         assertEquals(overrodeResult, objUnderTest.getResult());
     }
 
-    //TODO come back to this when finished implementing conditionNodes
-//    @ParameterizedTest
-//    @CsvSource({"true, true, true", "true, false, false", "false, true, false", "false, false, false"})
-//    public void testGetResultWithBothBinaryRelatedNode(boolean leftNodeResult, boolean rightNodeResult, boolean expected){
-//        AndNode leftNode = new AndNode(new VariableNode<>("condition1", true),
-//                new VariableNode<>("condition2", true));
-//        AndNode rightNode = new AndNode(new VariableNode<>("condition3", true),
-//                new VariableNode<>("condition4", true));
-//        leftNode.setResult(leftNodeResult);
-//        rightNode.setResult(rightNodeResult);
-//
-//        AndNode objUnderTest = new AndNode(leftNode, rightNode);
-//
-//        assertEquals(expected, objUnderTest.getResult());
-//    }
+    @ParameterizedTest
+    @CsvSource({"true, true, true", "true, false, false", "false, true, false", "false, false, false"})
+    public void testGetResultWithBothBinaryRelatedNode(boolean leftNodeResult, boolean rightNodeResult, boolean expected) {
+        AndNode leftNode = new AndNode(new VariableNode<>("condition1", 1),
+                new VariableNode<>("condition2", 1));
+        AndNode rightNode = new AndNode(new VariableNode<>("condition3", 1),
+                new VariableNode<>("condition4", 1));
+        leftNode.setResult(leftNodeResult);
+        rightNode.setResult(rightNodeResult);
+
+        AndNode objUnderTest = new AndNode(leftNode, rightNode);
+
+        assertEquals(expected, objUnderTest.getResult());
+    }
 
 }

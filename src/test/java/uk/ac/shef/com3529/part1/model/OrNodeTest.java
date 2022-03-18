@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class OrNodeTest {
     @ParameterizedTest
     @CsvSource({"1, 1, true", "1, 1, false"})
-    public void testGetResultWithOverrodeResult(int leftNodeValue, int rightNodeValue, boolean overrodeResult){
+    public void testGetResultWithOverrodeResult(int leftNodeValue, int rightNodeValue, boolean overrodeResult) {
         OrNode objUnderTest = new OrNode(new VariableNode<>("condition1", leftNodeValue),
                 new VariableNode<>("condition2", rightNodeValue));
 
@@ -19,19 +19,19 @@ public class OrNodeTest {
         assertEquals(overrodeResult, objUnderTest.getResult());
     }
 
-    //TODO come back to this when finished implementing conditionNodes
-//    @ParameterizedTest
-//    @CsvSource({"true, true, true", "true, false, true", "false, true, true", "false, false, false"})
-//    public void testOrNodeWithBothBinaryRelatedNode(boolean leftNodeResult, boolean rightNodeResult, boolean expected){
-//        OrNode leftNode = new OrNode(new VariableNode<>("condition1", true),
-//                new VariableNode<>("condition2", true));
-//        OrNode rightNode = new OrNode(new VariableNode<>("condition3", true),
-//                new VariableNode<>("condition4", true));
-//        leftNode.setResult(leftNodeResult);
-//        rightNode.setResult(rightNodeResult);
-//
-//        OrNode objUnderTest = new OrNode(leftNode, rightNode);
-//
-//        assertEquals(expected, objUnderTest.getResult());
-//    }
+    @ParameterizedTest
+    @CsvSource({"true, true, true", "true, false, true", "false, true, true", "false, false, false"})
+    public void testOrNodeWithBothBinaryRelatedNode(boolean leftNodeResult, boolean rightNodeResult, boolean expected) {
+        OrNode leftNode = new OrNode(new VariableNode<>("v1", 1),
+                new VariableNode<>("v2", 1));
+        OrNode rightNode = new OrNode(new VariableNode<>("v3", 2),
+                new VariableNode<>("v4", 2));
+
+        leftNode.setResult(leftNodeResult);
+        rightNode.setResult(rightNodeResult);
+
+        OrNode objUnderTest = new OrNode(leftNode, rightNode);
+
+        assertEquals(expected, objUnderTest.getResult());
+    }
 }

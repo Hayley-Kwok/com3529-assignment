@@ -13,14 +13,14 @@ public class ArithmeticNode extends SyntaxNode {
         this.rightNode = rightNode;
     }
 
-    public Number getResult() {
+    public double getResult() {
         // It is known that the program will face different numerical values. In order to perform the arithmetic operations,
         // the value have to be casted to one of the concrete type of Number. So, in here, the value is being casted to
         // be double which can represent most of the value represents by different Number type of java.
-        double leftNodeValue = ((VariableNode<?>)leftNode).getValue().doubleValue();
-        double rightNodeValue = ((VariableNode<?>)rightNode).getValue().doubleValue();
+        double leftNodeValue = ((VariableNode<?>) leftNode).getValue().doubleValue();
+        double rightNodeValue = ((VariableNode<?>) rightNode).getValue().doubleValue();
 
-        switch(relation) {
+        switch (relation) {
             case Add:
                 return leftNodeValue + rightNodeValue;
             case Minus:
