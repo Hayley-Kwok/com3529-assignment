@@ -1,9 +1,9 @@
 package uk.ac.shef.com3529.assignment.part1.model;
 
-import java.util.AbstractMap;
+import java.util.Objects;
 
 /**
-    This node represents the binary relationship of two syntax nodes.
+ * This node represents the binary relationship of two syntax nodes.
  */
 
 public abstract class BinaryRelatedNode<T> extends SyntaxNode {
@@ -11,7 +11,7 @@ public abstract class BinaryRelatedNode<T> extends SyntaxNode {
     protected boolean result;
     protected boolean resultOverrode;
 
-    public BinaryRelatedNode(SyntaxNode leftNode,T relation, SyntaxNode rightNode){
+    public BinaryRelatedNode(SyntaxNode leftNode, T relation, SyntaxNode rightNode) {
         this.leftNode = leftNode;
         this.relation = relation;
         this.rightNode = rightNode;
@@ -22,5 +22,31 @@ public abstract class BinaryRelatedNode<T> extends SyntaxNode {
     public void setResult(boolean result) {
         this.resultOverrode = true;
         this.result = result;
+    }
+
+    public T getRelation() {
+        return relation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o.getClass() != this.getClass()) return false;
+        BinaryRelatedNode<?> that = (BinaryRelatedNode<?>) o;
+        return result == that.result &&
+                resultOverrode == that.resultOverrode &&
+                relation.equals(that.relation) &&
+                leftNode.equals(that.leftNode) &&
+                rightNode.equals(that.rightNode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(relation, result, resultOverrode, leftNode, rightNode);
+    }
+
+    @Override
+    public String toString() {
+        return leftNode.toString() + " " + relation.toString() + " " + rightNode.toString();
     }
 }

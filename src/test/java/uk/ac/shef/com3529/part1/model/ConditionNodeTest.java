@@ -104,7 +104,6 @@ public class ConditionNodeTest {
         assertTrue(objUnderTest.getResult());
     }
 
-
     @ParameterizedTest
     @CsvSource({"1, EqualsEquals, 1, true", "1, EqualsEquals, 2, false",
             "1, NotEquals, 2, true", "1, NotEquals, 1, false",
@@ -119,6 +118,26 @@ public class ConditionNodeTest {
                 new VariableNode<>("v2", v2Val));
 
         assertEquals(expected, objUnderTest.getResult());
+    }
 
+    @ParameterizedTest
+    @CsvSource({"true, true, EqualsEquals, EqualsEquals, true",
+            "true, false, EqualsEquals, EqualsEquals, false,",
+            "true, false, EqualsEquals, NotEquals, false,"})
+    public void testEquals(boolean n1Result, boolean n2Result, String n1relation, String n2relation, boolean expected) {
+        ConditionNode n1 = new ConditionNode(
+                new VariableNode<>("condition1", 1),
+                ComparisonRelation.valueOf(n1relation),
+                new VariableNode<>("condition2", 1));
+
+        ConditionNode n2 = new ConditionNode(
+                new VariableNode<>("condition1", 1),
+                ComparisonRelation.valueOf(n2relation),
+                new VariableNode<>("condition2", 1));
+
+        n1.setResult(n1Result);
+        n2.setResult(n2Result);
+
+        assertEquals(expected, n1.equals(n2));
     }
 }

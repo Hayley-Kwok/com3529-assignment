@@ -33,4 +33,8 @@ public class VariableNode<T extends Number> extends SyntaxNode {
         return Objects.hash(name, value);
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }

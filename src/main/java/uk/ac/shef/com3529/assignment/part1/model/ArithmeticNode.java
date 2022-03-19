@@ -47,4 +47,9 @@ public class ArithmeticNode extends SyntaxNode {
     public int hashCode() {
         return Objects.hash(relation, leftNode, rightNode);
     }
+
+    @Override
+    public String toString() {
+        return leftNode.toString() + " " + relation.toString() + " " + rightNode.toString();
+    }
 }

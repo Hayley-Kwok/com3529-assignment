@@ -34,4 +34,18 @@ public class OrNodeTest {
 
         assertEquals(expected, objUnderTest.getResult());
     }
+
+    @ParameterizedTest
+    @CsvSource({"true, true, true", "true, false, false"})
+    public void testEquals(boolean n1Result, boolean n2Result, boolean expected) {
+        OrNode n1 = new OrNode(new VariableNode<>("condition1", 1),
+                new VariableNode<>("condition2", 1));
+        OrNode n2 = new OrNode(new VariableNode<>("condition1", 1),
+                new VariableNode<>("condition2", 1));
+
+        n1.setResult(n1Result);
+        n2.setResult(n2Result);
+
+        assertEquals(expected, n1.equals(n2));
+    }
 }
