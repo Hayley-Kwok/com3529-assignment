@@ -6,11 +6,17 @@ import uk.ac.shef.com3529.assignment.part1.model.enums.ComparisonRelation;
 
 public class ParsedExamples {
 
-    /**
-        Return the root node for the following branch predicate from week 3 practical sheet
-            if (side1 + side2 >= side3 &&
+    private boolean test(int side1, int side2, int side3) {
+        return (side1 + side2 >= side3 &&
                 (side1 == side2 || side2 == side3) &&
-                (side1 != side2 || side2 != side3))
+                (side1 != side2 || side2 != side3));
+    }
+
+    /**
+     * Return the root node for the following branch predicate from week 3 practical sheet
+     * if (side1 + side2 >= side3 &&
+     * (side1 == side2 || side2 == side3) &&
+     * (side1 != side2 || side2 != side3))
      */
     public static SyntaxNode getTrianglePractical() {
         SyntaxNode side1 = new VariableNode<Integer>("side1");

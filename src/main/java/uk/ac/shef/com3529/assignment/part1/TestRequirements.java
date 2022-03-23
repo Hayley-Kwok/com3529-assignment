@@ -40,6 +40,9 @@ public class TestRequirements {
         return majors;
     }
 
+    /**
+     * Find all the Majors from allCondition and save it to Majors field
+     */
     private void findMajors() {
         majors = new HashSet<>(allConditions);
 
@@ -66,11 +69,21 @@ public class TestRequirements {
         eliminateContradictingNode(smallerThanNodes, ComparisonRelation.LargerOrEqualsTo, false);
     }
 
+    /**
+     * Eliminate the contradicting conditions of conditions from the notEqualsNodes from major and add the eliminated
+     * conditions to removedContradictingConditions so that we can still compute the branch predicate.
+     * An example of contradicting conditions is (v1 >= v2) and (v1 < v2)
+     *
+     * @param notEqualsNodes    a set of nodes with the same ComparisonRelation
+     * @param flippedRelation   the contradicting ComparisonRelation of notEqualsNodes
+     * @param flipLeftRightNode does the method consider flipping leftNode and rightNode. Eg: (v1 == v2) should consider
+     *                          both (v1 != v2) & (v2 != v1) as a contradicting condition
+     */
     private void eliminateContradictingNode(HashSet<ConditionNode> notEqualsNodes, ComparisonRelation flippedRelation,
-                                            boolean considerFlippingNodes) {
+                                            boolean flipLeftRightNode) {
         for (ConditionNode currentNode : notEqualsNodes) {
             ConditionNode[] oppositeNodes;
-            if (considerFlippingNodes) {
+            if (flipLeftRightNode) {
                 oppositeNodes = new ConditionNode[]{
                         new ConditionNode(currentNode.getLeftNode(), flippedRelation, currentNode.getRightNode()),
                         new ConditionNode(currentNode.getRightNode(), flippedRelation, currentNode.getLeftNode())};
@@ -120,18 +133,34 @@ public class TestRequirements {
         }
     }
 
+    /**
+     * Add the node into the allConditions set if the type is ConditionNode; Method being used in traverseTree
+     *
+     * @param node a syntaxNode
+     */
     private void addConditionNodeToConditions(SyntaxNode node) {
         if (node instanceof ConditionNode) {
             allConditions.add((ConditionNode) node);
         }
     }
 
+    /**
+     * Add the node into the variables set if the type is VariableNode; Method being used in traverseTree
+     *
+     * @param node a syntaxNode
+     */
     private void addVariableNodeToVariables(SyntaxNode node) {
         if (node instanceof VariableNode) {
             variables.add((VariableNode<?>) node);
         }
     }
 
+    /**
+     * Looping through the entire syntax tree in order and call the addNodeToSet method on each node
+     *
+     * @param node         root node to the syntax tree
+     * @param addNodeToSet method that take in the current node and do some operation on it
+     */
     private void traverseTree(SyntaxNode node, Consumer<SyntaxNode> addNodeToSet) {
         if (node == null) {
             return;
