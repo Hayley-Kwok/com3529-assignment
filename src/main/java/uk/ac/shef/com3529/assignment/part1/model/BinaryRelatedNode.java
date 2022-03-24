@@ -9,7 +9,6 @@ import java.util.Objects;
 public abstract class BinaryRelatedNode<T> extends SyntaxNode {
     protected T relation;
     protected boolean result;
-    protected boolean resultOverrode;
 
     public BinaryRelatedNode(SyntaxNode leftNode, T relation, SyntaxNode rightNode) {
         this.leftNode = leftNode;
@@ -18,11 +17,6 @@ public abstract class BinaryRelatedNode<T> extends SyntaxNode {
     }
 
     public abstract boolean getResult();
-
-    public void setResult(boolean result) {
-        this.resultOverrode = true;
-        this.result = result;
-    }
 
     public T getRelation() {
         return relation;
@@ -34,7 +28,6 @@ public abstract class BinaryRelatedNode<T> extends SyntaxNode {
         if (o.getClass() != this.getClass()) return false;
         BinaryRelatedNode<?> that = (BinaryRelatedNode<?>) o;
         return result == that.result &&
-                resultOverrode == that.resultOverrode &&
                 relation.equals(that.relation) &&
                 leftNode.equals(that.leftNode) &&
                 rightNode.equals(that.rightNode);
@@ -42,7 +35,7 @@ public abstract class BinaryRelatedNode<T> extends SyntaxNode {
 
     @Override
     public int hashCode() {
-        return Objects.hash(relation, result, resultOverrode, leftNode, rightNode);
+        return Objects.hash(relation, result, leftNode, rightNode);
     }
 
     @Override

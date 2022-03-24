@@ -13,10 +13,6 @@ public class OrNode extends BinaryRelatedNode<BinaryRelation>{
     // true and thereby there are no addition check on the casting.
     @Override
     public boolean getResult() {
-        if (resultOverrode) {
-            return result;
-        }
-
         return ((BinaryRelatedNode<?>)leftNode).getResult() || ((BinaryRelatedNode<?>)rightNode).getResult();
     }
 }
