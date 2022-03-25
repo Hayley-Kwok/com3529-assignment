@@ -2,9 +2,22 @@ package uk.ac.shef.com3529.assignment.part1.model;
 
 import uk.ac.shef.com3529.assignment.part1.model.enums.ComparisonRelation;
 
+import java.util.Objects;
+
 public class ConditionNode extends BinaryRelatedNode<ComparisonRelation> {
+
+    protected boolean resultOverrode;
+
     public ConditionNode(SyntaxNode leftNode, ComparisonRelation relation, SyntaxNode rightNode) {
         super(leftNode, relation, rightNode);
+    }
+
+    public boolean getResultOverrode() {
+        return resultOverrode;
+    }
+
+    public void resetResultOverrode() {
+        this.resultOverrode = false;
     }
 
     @Override
@@ -67,5 +80,28 @@ public class ConditionNode extends BinaryRelatedNode<ComparisonRelation> {
                 return leftNodeVal <= rightNodeVal;
         }
         throw new IllegalStateException("there is an error from the ComparisonRelation");
+    }
+
+    public void setResult(boolean result) {
+        this.resultOverrode = true;
+        this.result = result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o.getClass() != this.getClass()) return false;
+        ConditionNode that = (ConditionNode) o;
+        return result == that.result &&
+                resultOverrode == that.resultOverrode &&
+                relation.equals(that.relation) &&
+                leftNode.equals(that.leftNode) &&
+                rightNode.equals(that.rightNode);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(relation, leftNode, rightNode, resultOverrode, result);
     }
 }

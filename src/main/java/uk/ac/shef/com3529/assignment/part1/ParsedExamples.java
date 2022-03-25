@@ -18,15 +18,15 @@ public class ParsedExamples {
      * (side1 == side2 || side2 == side3) &&
      * (side1 != side2 || side2 != side3))
      */
-    public static SyntaxNode getTrianglePractical() {
+    public static BinaryRelatedNode<?> getTrianglePractical() {
         SyntaxNode side1 = new VariableNode<Integer>("side1");
         SyntaxNode side2 = new VariableNode<Integer>("side2");
         SyntaxNode side3 = new VariableNode<Integer>("side3");
 
         SyntaxNode c1 = new ConditionNode
                 (new ArithmeticNode(side1, ArithmeticRelation.Add, side2),
-                    ComparisonRelation.LargerThan,
-                    side3);
+                        ComparisonRelation.LargerThan,
+                        side3);
 
         SyntaxNode c2 = new ConditionNode(side1, ComparisonRelation.EqualsEquals, side2);
         SyntaxNode c3 = new ConditionNode(side2, ComparisonRelation.EqualsEquals, side3);

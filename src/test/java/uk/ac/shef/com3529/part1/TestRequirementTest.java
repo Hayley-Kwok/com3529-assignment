@@ -6,8 +6,8 @@ import uk.ac.shef.com3529.assignment.part1.model.*;
 import uk.ac.shef.com3529.assignment.part1.model.enums.ArithmeticRelation;
 import uk.ac.shef.com3529.assignment.part1.model.enums.ComparisonRelation;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -64,13 +64,12 @@ public class TestRequirementTest {
         ConditionNode c3 = new ConditionNode(v1, ComparisonRelation.EqualsEquals, v2);
         AndNode root = new AndNode(c1, new AndNode(c2, c3));
 
-        HashSet<ConditionNode> c1HashSet = new HashSet<>(Collections.singletonList(c1));
-        HashSet<ConditionNode> c2HashSet = new HashSet<>(Collections.singletonList(c2));
         TestRequirements objUnderTest = new TestRequirements(root);
 
-        HashSet<ConditionNode> actualMajors = objUnderTest.getMajors();
+        ConditionNode[] actualMajors = objUnderTest.getMajors();
 
-        assertTrue(c1HashSet.equals(actualMajors) || c2HashSet.equals(actualMajors));
+        assertTrue(Arrays.equals(actualMajors, new ConditionNode[]{c1}) ||
+                Arrays.equals(actualMajors, new ConditionNode[]{c2}));
     }
 
     @Test
@@ -85,13 +84,12 @@ public class TestRequirementTest {
         ConditionNode c4 = new ConditionNode(v2, ComparisonRelation.EqualsEquals, v1);
         AndNode root = new AndNode(new AndNode(c1, c2), new OrNode(c3, c4));
 
-        HashSet<ConditionNode> c1HashSet = new HashSet<>(Collections.singletonList(c1));
-        HashSet<ConditionNode> c4HashSet = new HashSet<>(Collections.singletonList(c4));
         TestRequirements objUnderTest = new TestRequirements(root);
 
-        HashSet<ConditionNode> actualMajors = objUnderTest.getMajors();
+        ConditionNode[] actualMajors = objUnderTest.getMajors();
 
-        assertTrue(c1HashSet.equals(actualMajors) || c4HashSet.equals(actualMajors));
+        assertTrue(Arrays.equals(actualMajors, new ConditionNode[]{c1}) ||
+                Arrays.equals(actualMajors, new ConditionNode[]{c4}));
     }
 
     @Test
@@ -105,8 +103,7 @@ public class TestRequirementTest {
 
         TestRequirements objUnderTest = new TestRequirements(new AndNode(c1, c2));
 
-        HashSet<ConditionNode> expectedMajors = new HashSet<>(Collections.singletonList(c1));
-        assertEquals(expectedMajors, objUnderTest.getMajors());
+        assertTrue(Arrays.equals(objUnderTest.getMajors(), new ConditionNode[]{c1}));
     }
 
     @Test
@@ -120,7 +117,27 @@ public class TestRequirementTest {
 
         TestRequirements objUnderTest = new TestRequirements(new AndNode(c1, c2));
 
-        HashSet<ConditionNode> expectedMajors = new HashSet<>(Collections.singletonList(c1));
-        assertEquals(expectedMajors, objUnderTest.getMajors());
+        assertTrue(Arrays.equals(objUnderTest.getMajors(), new ConditionNode[]{c1}));
+    }
+
+    @Test
+    public void testGetFullMultiConditionTable() {
+        //The predicate: (v1 < v2) || (v1 == v2)
+        VariableNode<?> v1 = new VariableNode<Integer>("v1");
+        VariableNode<?> v2 = new VariableNode<Double>("v2");
+
+        ConditionNode c1 = new ConditionNode(v1, ComparisonRelation.SmallerThan, v2);
+        ConditionNode c2 = new ConditionNode(v1, ComparisonRelation.EqualsEquals, v2);
+
+        TestRequirements objUnderTest = new TestRequirements(new OrNode(c1, c2));
+
+        ArrayList<ArrayList<Boolean>> expected = new ArrayList<>(Arrays.asList(
+                new ArrayList<>(Arrays.asList(false, false, false)),
+                new ArrayList<>(Arrays.asList(false, true, true)),
+                new ArrayList<>(Arrays.asList(true, false, true)),
+                new ArrayList<>(Arrays.asList(true, true, true))
+        ));
+
+        assertTrue(expected.equals(objUnderTest.getFullMultiConditionTable()));
     }
 }

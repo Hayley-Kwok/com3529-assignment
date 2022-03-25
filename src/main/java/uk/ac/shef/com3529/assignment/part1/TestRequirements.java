@@ -1,5 +1,6 @@
 package uk.ac.shef.com3529.assignment.part1;
 
+import uk.ac.shef.com3529.assignment.part1.model.BinaryRelatedNode;
 import uk.ac.shef.com3529.assignment.part1.model.ConditionNode;
 import uk.ac.shef.com3529.assignment.part1.model.SyntaxNode;
 import uk.ac.shef.com3529.assignment.part1.model.VariableNode;
@@ -10,21 +11,24 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class TestRequirements {
-    private final SyntaxNode root;
+    private final BinaryRelatedNode<?> root;
     private final HashSet<VariableNode<?>> variables = new HashSet<>();
     private final HashSet<ConditionNode> allConditions = new HashSet<>();
-    private HashSet<ConditionNode> majors;
-    private HashMap<ConditionNode, ArrayList<ConditionNode>> removedEquivalentConditions = new HashMap<>();
-    private HashMap<ConditionNode, ArrayList<ConditionNode>> removedContradictingConditions = new HashMap<>();
+    private ConditionNode[] majors;
+    private ArrayList<ArrayList<Boolean>> fullMultiConditionTable;
 
-    public TestRequirements(SyntaxNode root) {
+    //using string as the key for the ConditionNode here cause HashMap doesn't like mutating object as key
+    private HashMap<String, ArrayList<ConditionNode>> removedEquivalentConditions = new HashMap<>();
+    private HashMap<String, ArrayList<ConditionNode>> removedContradictingConditions = new HashMap<>();
+
+    public TestRequirements(BinaryRelatedNode<?> root) {
         this.root = root;
         traverseTree(root, this::addVariableNodeToVariables);
         traverseTree(root, this::addConditionNodeToConditions);
         findMajors();
     }
 
-    public SyntaxNode getRoot() {
+    public BinaryRelatedNode<?> getRoot() {
         return root;
     }
 
@@ -36,37 +40,110 @@ public class TestRequirements {
         return allConditions;
     }
 
-    public HashSet<ConditionNode> getMajors() {
+    public ConditionNode[] getMajors() {
         return majors;
     }
 
+    public ArrayList<ArrayList<Boolean>> getFullMultiConditionTable() {
+        if (fullMultiConditionTable != null){
+            return fullMultiConditionTable;
+        }
+
+        ArrayList<ArrayList<Boolean>> fullTruthTable = generateBooleanValuesForConditions(majors.length);
+        for (ArrayList<Boolean> row : fullTruthTable) {
+            for (int i = 0; i < majors.length; i++) {
+                majors[i].setResult(row.get(i));
+            }
+            row.add(getBranchPredicate());
+        }
+
+        fullMultiConditionTable = fullTruthTable;
+        return fullMultiConditionTable;
+    }
+
+    private ArrayList<ArrayList<Boolean>> generateBooleanValuesForConditions(int n) {
+        int rows = (int) Math.pow(2, n);
+
+        ArrayList<ArrayList<Boolean>> truthTable = new ArrayList<>();
+        for (int i = 0; i < rows; i++) {
+            ArrayList<Boolean> row = new ArrayList<>();
+            for (int j = n - 1; j >= 0; j--) {
+                if (((i / (int) Math.pow(2, j)) % 2) == 1) {
+                    row.add(true);
+                } else {
+                    row.add(false);
+                }
+            }
+            truthTable.add(row);
+        }
+        return truthTable;
+    }
+
+    //called after updating all majors
+    private boolean getBranchPredicate() {
+        for (ConditionNode major : majors) {
+            String key = major.toString();
+            if (removedEquivalentConditions.containsKey(key)) {
+                ArrayList<ConditionNode> equivalentNodes = removedEquivalentConditions.get(key);
+                for (ConditionNode node : equivalentNodes) {
+                    node.setResult(major.getResult());
+                }
+            }
+
+            if (removedContradictingConditions.containsKey(key)) {
+                ArrayList<ConditionNode> contradictingNodes = removedContradictingConditions.get(key);
+                for (ConditionNode node : contradictingNodes) {
+                    node.setResult(!major.getResult());
+                }
+            }
+        }
+        try {
+            makeSureUpdateAllConditions();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return root.getResult();
+    }
+
+    private void makeSureUpdateAllConditions() throws Exception {
+        for (ConditionNode node : allConditions) {
+            if (!node.getResultOverrode()) {
+                throw new Exception("not all node is updated when evaluating branch predicate");
+            }
+        }
+    }
+
     /**
-     * Find all the Majors from allCondition and save it to Majors field
+     * Find all the Majors from allCondition and save it to majors field
      */
     private void findMajors() {
-        majors = new HashSet<>(allConditions);
+        //TODO flip v1 >= v2 & v2 <= v1 as equivalent
+        HashSet<ConditionNode> majorSet = new HashSet<>(allConditions);
 
         HashSet<ConditionNode> equalsNodes =
-                majors.stream().filter(n -> n.getRelation().equals(ComparisonRelation.EqualsEquals)).
+                majorSet.stream().filter(n -> n.getRelation().equals(ComparisonRelation.EqualsEquals)).
                         collect(Collectors.toCollection(HashSet::new));
-        eliminateEquivalentNodes(equalsNodes);
-        eliminateContradictingNode(equalsNodes, ComparisonRelation.NotEquals, true);
+        eliminateEquivalentNodes(equalsNodes, majorSet);
+        eliminateContradictingNode(equalsNodes, majorSet, ComparisonRelation.NotEquals, true);
 
         HashSet<ConditionNode> notEqualsNodes =
-                majors.stream().filter(n -> n.getRelation().equals(ComparisonRelation.NotEquals)).
+                majorSet.stream().filter(n -> n.getRelation().equals(ComparisonRelation.NotEquals)).
                         collect(Collectors.toCollection(HashSet::new));
-        eliminateEquivalentNodes(notEqualsNodes);
+        eliminateEquivalentNodes(notEqualsNodes, majorSet);
 
 
         HashSet<ConditionNode> largerThanNodes =
-                majors.stream().filter(n -> n.getRelation().equals(ComparisonRelation.LargerThan)).
+                majorSet.stream().filter(n -> n.getRelation().equals(ComparisonRelation.LargerThan)).
                         collect(Collectors.toCollection(HashSet::new));
-        eliminateContradictingNode(largerThanNodes, ComparisonRelation.SmallerOrEqualsTo, false);
+        eliminateContradictingNode(largerThanNodes, majorSet, ComparisonRelation.SmallerOrEqualsTo, false);
 
         HashSet<ConditionNode> smallerThanNodes =
-                majors.stream().filter(n -> n.getRelation().equals(ComparisonRelation.SmallerThan)).
+                majorSet.stream().filter(n -> n.getRelation().equals(ComparisonRelation.SmallerThan)).
                         collect(Collectors.toCollection(HashSet::new));
-        eliminateContradictingNode(smallerThanNodes, ComparisonRelation.LargerOrEqualsTo, false);
+        eliminateContradictingNode(smallerThanNodes, majorSet, ComparisonRelation.LargerOrEqualsTo, false);
+
+        majors = new ConditionNode[majorSet.size()];
+        majorSet.toArray(majors);
     }
 
     /**
@@ -75,11 +152,14 @@ public class TestRequirements {
      * An example of contradicting conditions is (v1 >= v2) and (v1 < v2)
      *
      * @param notEqualsNodes    a set of nodes with the same ComparisonRelation
+     * @param majorSet          the set of majors we are updating
      * @param flippedRelation   the contradicting ComparisonRelation of notEqualsNodes
      * @param flipLeftRightNode does the method consider flipping leftNode and rightNode. Eg: (v1 == v2) should consider
      *                          both (v1 != v2) & (v2 != v1) as a contradicting condition
      */
-    private void eliminateContradictingNode(HashSet<ConditionNode> notEqualsNodes, ComparisonRelation flippedRelation,
+    private void eliminateContradictingNode(HashSet<ConditionNode> notEqualsNodes,
+                                            HashSet<ConditionNode> majorSet,
+                                            ComparisonRelation flippedRelation,
                                             boolean flipLeftRightNode) {
         for (ConditionNode currentNode : notEqualsNodes) {
             ConditionNode[] oppositeNodes;
@@ -93,17 +173,27 @@ public class TestRequirements {
             }
 
             for (ConditionNode oppositeNode : oppositeNodes) {
-                if (majors.contains(oppositeNode)) {
-                    majors.remove(oppositeNode);
-
-                    if (removedContradictingConditions.containsKey(currentNode)) {
-                        removedContradictingConditions.get(currentNode).add(oppositeNode);
+                ConditionNode contradictingNode = getNodeFromSet(oppositeNode, majorSet);
+                if (contradictingNode != null) {
+                    majorSet.remove(contradictingNode);
+                    String key = currentNode.toString();
+                    if (removedContradictingConditions.containsKey(key)) {
+                        removedContradictingConditions.get(key).add(contradictingNode);
                     } else {
-                        removedContradictingConditions.put(currentNode, new ArrayList<>(Collections.singletonList(oppositeNode)));
+                        removedContradictingConditions.put(key, new ArrayList<>(Collections.singletonList(contradictingNode)));
                     }
                 }
             }
         }
+    }
+
+    private ConditionNode getNodeFromSet(ConditionNode node, HashSet<ConditionNode> set) {
+        for (ConditionNode element : set) {
+            if (element.equals(node)) {
+                return element;
+            }
+        }
+        return null;
     }
 
     /**
@@ -113,8 +203,9 @@ public class TestRequirements {
      * that the value can still be updated when computing the branch predicate.
      *
      * @param nodeSubset subset of the node that has the same ComparisonRelation
+     * @param majorSet   set of major we are considering
      */
-    private void eliminateEquivalentNodes(HashSet<ConditionNode> nodeSubset) {
+    private void eliminateEquivalentNodes(HashSet<ConditionNode> nodeSubset, HashSet<ConditionNode> majorSet) {
         for (Iterator<ConditionNode> i = nodeSubset.iterator(); i.hasNext(); ) {
             ConditionNode currentNode = i.next();
 
@@ -123,11 +214,12 @@ public class TestRequirements {
 
             if (nodeSubset.contains(positionSwappedNode)) {
                 i.remove();
-                majors.remove(currentNode);
-                if (removedEquivalentConditions.containsKey(positionSwappedNode)) {
-                    removedEquivalentConditions.get(positionSwappedNode).add(currentNode);
+                majorSet.remove(currentNode);
+                String key = positionSwappedNode.toString();
+                if (removedEquivalentConditions.containsKey(key)) {
+                    removedEquivalentConditions.get(key).add(currentNode);
                 } else {
-                    removedEquivalentConditions.put(positionSwappedNode, new ArrayList<>(Collections.singletonList(currentNode)));
+                    removedEquivalentConditions.put(key, new ArrayList<>(Collections.singletonList(currentNode)));
                 }
             }
         }
