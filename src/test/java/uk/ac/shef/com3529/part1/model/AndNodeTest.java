@@ -39,6 +39,7 @@ public class AndNodeTest {
         AndNode n2 = new AndNode(new VariableNode<>("condition1", n2c1Val),
                 new VariableNode<>("condition2", 1));
 
+        assertEquals(expected, n1.hashCode() == n2.hashCode());
         assertEquals(expected, n1.equals(n2));
     }
 }

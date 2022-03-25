@@ -17,6 +17,7 @@ public class VariableNodeTest {
         VariableNode<Integer> a = new VariableNode<>(aName, aVal);
         VariableNode<Integer> b = new VariableNode<>(bName, bVal);
 
+        assertEquals(equals, a.hashCode() == b.hashCode());
         assertEquals(a.equals(b), equals);
     }
 }

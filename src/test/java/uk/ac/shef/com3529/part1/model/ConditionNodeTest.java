@@ -138,6 +138,7 @@ public class ConditionNodeTest {
         n1.setResult(n1Result);
         n2.setResult(n2Result);
 
+        assertEquals(expected, n1.hashCode() == n2.hashCode());
         assertEquals(expected, n1.equals(n2));
     }
 }

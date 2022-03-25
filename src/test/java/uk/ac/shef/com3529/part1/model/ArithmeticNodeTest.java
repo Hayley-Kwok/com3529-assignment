@@ -45,6 +45,7 @@ public class ArithmeticNodeTest {
                 ArithmeticRelation.valueOf(node2Relation),
                 new VariableNode<>(node2RightName, node2RightVal));
 
+        assertEquals(expectedVal, node1.hashCode() == node2.hashCode());
         assertEquals(node1.equals(node2), expectedVal);
     }
 }
