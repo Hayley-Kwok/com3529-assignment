@@ -40,6 +40,9 @@ public abstract class BinaryRelatedNode<T> extends SyntaxNode {
 
     @Override
     public String toString() {
-        return leftNode.toString() + " " + relation.toString() + " " + rightNode.toString();
+        return "(" +
+                leftNode.toString() + " " +
+                relation.toString() + " " +
+                rightNode.toString() + ")";
     }
 }

@@ -11,5 +11,7 @@ public class EntryPoint {
         System.out.println("All Majors: " + Arrays.toString(trianglePractical.getMajors()));
 
         System.out.println(trianglePractical.getFullMultiConditionTable());
+        System.out.println(trianglePractical.getRestrictedMCDCString());
+
     }
 }

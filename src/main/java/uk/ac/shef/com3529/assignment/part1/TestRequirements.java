@@ -16,6 +16,7 @@ public class TestRequirements {
     private final HashSet<ConditionNode> allConditions = new HashSet<>();
     private ConditionNode[] majors;
     private ArrayList<ArrayList<Boolean>> fullMultiConditionTable;
+    private ArrayList<int[]>[] restrictedMCDC;
 
     //using string as the key for the ConditionNode here cause HashMap doesn't like mutating object as key
     private HashMap<String, ArrayList<ConditionNode>> removedEquivalentConditions = new HashMap<>();
@@ -45,7 +46,7 @@ public class TestRequirements {
     }
 
     public ArrayList<ArrayList<Boolean>> getFullMultiConditionTable() {
-        if (fullMultiConditionTable != null){
+        if (fullMultiConditionTable != null) {
             return fullMultiConditionTable;
         }
 
@@ -59,6 +60,65 @@ public class TestRequirements {
 
         fullMultiConditionTable = fullTruthTable;
         return fullMultiConditionTable;
+    }
+
+    public String getRestrictedMCDCString() {
+        StringBuilder sb = new StringBuilder().append("[");
+        for (ArrayList<int[]> row : getRestrictedMCDC()) {
+            sb.append("[");
+            if (row == null) {
+                sb.append("null");
+            } else {
+                for (int[] pair : row) {
+                    sb.append(Arrays.toString(pair)).append(", ");
+                }
+                sb.setLength(sb.length() - 2);
+            }
+            sb.append("], ");
+        }
+        sb.setLength(sb.length() - 2);
+        sb.append("]");
+        return sb.toString();
+    }
+
+    public ArrayList<int[]>[] getRestrictedMCDC() {
+        if (restrictedMCDC != null) {
+            return restrictedMCDC;
+        }
+
+        restrictedMCDC = new ArrayList[majors.length];
+
+        for (int i = 0; i < majors.length; i++) {
+            for (int j = 0; j < getFullMultiConditionTable().size(); j++) {
+                ArrayList<Boolean> flippedRow = getRestrictedFlippedRow(fullMultiConditionTable.get(j), i);
+                for (int k = j; k < fullMultiConditionTable.size(); k++) {
+                    if (fullMultiConditionTable.get(k).equals(flippedRow)) {
+                        if (restrictedMCDC[i] == null) {
+                            restrictedMCDC[i] = new ArrayList<>();
+                        }
+                        restrictedMCDC[i].add(new int[]{j, k});
+                    }
+                }
+            }
+        }
+        return restrictedMCDC;
+    }
+
+    private ArrayList<Boolean> getRestrictedFlippedRow(ArrayList<Boolean> orgRow, int majorIndex) {
+        ArrayList<Boolean> flippedRow = new ArrayList<>(orgRow);
+        int[] flippingIndices = new int[]{majorIndex, orgRow.size() - 1};
+        for (int i : flippingIndices) {
+            flippedRow.set(i, !flippedRow.get(i));
+        }
+        return flippedRow;
+    }
+
+    private ArrayList<Boolean> getFlippedRow(ArrayList<Boolean> orgRow) {
+        ArrayList<Boolean> flippedRow = new ArrayList<>();
+        for (boolean val : orgRow) {
+            flippedRow.add(!val);
+        }
+        return flippedRow;
     }
 
     private ArrayList<ArrayList<Boolean>> generateBooleanValuesForConditions(int n) {
