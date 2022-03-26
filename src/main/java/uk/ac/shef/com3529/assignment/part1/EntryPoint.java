@@ -10,8 +10,7 @@ public class EntryPoint {
         System.out.println("All Inputs: " + trianglePractical.getVariables());
         System.out.println("All Majors: " + Arrays.toString(trianglePractical.getMajors()));
 
-        System.out.println(trianglePractical.getFullMultiConditionTable());
-        System.out.println(trianglePractical.getRestrictedMCDCString());
-
+        System.out.println("Full Condition Table: " + trianglePractical.getFullMultiConditionTable());
+        System.out.println("Restricted MCDC Table:" + trianglePractical.getRestrictedMCDCConditionTable());
     }
 }

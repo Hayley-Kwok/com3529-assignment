@@ -16,7 +16,7 @@ public class TestRequirements {
     private final HashSet<ConditionNode> allConditions = new HashSet<>();
     private ConditionNode[] majors;
     private ArrayList<ArrayList<Boolean>> fullMultiConditionTable;
-    private ArrayList<int[]>[] restrictedMCDC;
+    private ArrayList<ArrayList<Boolean>> restrictedConditionTable;
 
     //using string as the key for the ConditionNode here cause HashMap doesn't like mutating object as key
     private HashMap<String, ArrayList<ConditionNode>> removedEquivalentConditions = new HashMap<>();
@@ -62,9 +62,103 @@ public class TestRequirements {
         return fullMultiConditionTable;
     }
 
-    public String getRestrictedMCDCString() {
+    public ArrayList<ArrayList<Boolean>> getRestrictedMCDCConditionTable() {
+        if (restrictedConditionTable != null) {
+            return restrictedConditionTable;
+        }
+
+        ArrayList<int[]>[] allRestrictedMCDCPairs = getPossibleRestrictedMCDCPairs();
+
+        List<ArrayList<int[]>> restrictedMCDCCombinations = generatePermutations(allRestrictedMCDCPairs);
+
+        //find the index of the test needed for each restrictedMCDCCombination
+        ArrayList<HashSet<Integer>> possibleRestrictedMCDC = new ArrayList<>();
+        for (ArrayList<int[]> restrictedMCDCCombination : restrictedMCDCCombinations) {
+            HashSet<Integer> row = new HashSet<>();
+            for (int[] ids : restrictedMCDCCombination) {
+                Arrays.stream(ids).forEach(row::add);
+            }
+            possibleRestrictedMCDC.add(row);
+        }
+
+        //find the set that require the minimum number of tests
+        int minTests = possibleRestrictedMCDC.stream().mapToInt(HashSet::size).min().getAsInt();
+        HashSet<Integer> MCDCIndices = possibleRestrictedMCDC.stream().filter(set -> set.size() == minTests).findFirst().get();
+
+        //grab the condition from the table
+        restrictedConditionTable = new ArrayList<>();
+        for (Integer index : MCDCIndices) {
+            restrictedConditionTable.add(getFullMultiConditionTable().get(index));
+        }
+        return restrictedConditionTable;
+    }
+
+    /**
+     * Generate all permutations of lists
+     *
+     * @param lists the list that the method will generate permutations for
+     * @return all permutations of the lists
+     */
+    private ArrayList<ArrayList<int[]>> generatePermutations(ArrayList<int[]>[] lists) {
+        ArrayList<ArrayList<int[]>> restrictedMCDCCombinations = new ArrayList<>();
+        generatePermutationsHelper(lists, restrictedMCDCCombinations, 0, new ArrayList<>());
+        return restrictedMCDCCombinations;
+    }
+
+    /**
+     * Helper for generatePermutations; It is a recursive function;
+     *
+     * @param lists   the list that the method will generate permutations for
+     * @param result  the list that store the result permutations
+     * @param depth   the depth that current list has reached
+     * @param current the list that store the permutations so far
+     */
+    private void generatePermutationsHelper(ArrayList<int[]>[] lists, ArrayList<ArrayList<int[]>> result, int depth, ArrayList<int[]> current) {
+        if (depth == lists.length) {
+            result.add(current);
+            return;
+        }
+
+        for (int i = 0; i < lists[depth].size(); i++) {
+            ArrayList<int[]> copy = new ArrayList<>(current);
+            copy.add(lists[depth].get(i));
+            generatePermutationsHelper(lists, result, depth + 1, new ArrayList<>(copy));
+        }
+    }
+
+    /**
+     * Generate all the possible pairs for restricted MCDC
+     *
+     * @return an array of arraylist of int array.
+     * The int array store the 2 indices of the test from the fullMultiConditionTable that satisfy restricted MCDC for that condition.
+     */
+    private ArrayList<int[]>[] getPossibleRestrictedMCDCPairs() {
+        ArrayList<int[]>[] allCandidates = new ArrayList[majors.length];
+
+        for (int i = 0; i < majors.length; i++) {
+            for (int j = 0; j < getFullMultiConditionTable().size(); j++) {
+                ArrayList<Boolean> flippedRow = getRestrictedFlippedRow(fullMultiConditionTable.get(j), i);
+                for (int k = j; k < fullMultiConditionTable.size(); k++) {
+                    if (fullMultiConditionTable.get(k).equals(flippedRow)) {
+                        if (allCandidates[i] == null) {
+                            allCandidates[i] = new ArrayList<>();
+                        }
+                        allCandidates[i].add(new int[]{j, k});
+                    }
+                }
+            }
+        }
+        return allCandidates;
+    }
+
+    /**
+     * Essentially a toString method for the object returned from getPossibleRestrictedMCDCPairs
+     *
+     * @return String version of getPossibleRestrictedMCDCPairs
+     */
+    private String getAllPossibleRestrictedMCDCStr() {
         StringBuilder sb = new StringBuilder().append("[");
-        for (ArrayList<int[]> row : getRestrictedMCDC()) {
+        for (ArrayList<int[]> row : getPossibleRestrictedMCDCPairs()) {
             sb.append("[");
             if (row == null) {
                 sb.append("null");
@@ -81,29 +175,13 @@ public class TestRequirements {
         return sb.toString();
     }
 
-    public ArrayList<int[]>[] getRestrictedMCDC() {
-        if (restrictedMCDC != null) {
-            return restrictedMCDC;
-        }
-
-        restrictedMCDC = new ArrayList[majors.length];
-
-        for (int i = 0; i < majors.length; i++) {
-            for (int j = 0; j < getFullMultiConditionTable().size(); j++) {
-                ArrayList<Boolean> flippedRow = getRestrictedFlippedRow(fullMultiConditionTable.get(j), i);
-                for (int k = j; k < fullMultiConditionTable.size(); k++) {
-                    if (fullMultiConditionTable.get(k).equals(flippedRow)) {
-                        if (restrictedMCDC[i] == null) {
-                            restrictedMCDC[i] = new ArrayList<>();
-                        }
-                        restrictedMCDC[i].add(new int[]{j, k});
-                    }
-                }
-            }
-        }
-        return restrictedMCDC;
-    }
-
+    /**
+     * Return an arrayList with elements at the last index (branch predicate) & majorIndex of orgRow flipped
+     *
+     * @param orgRow     the arrayList of the original row
+     * @param majorIndex the index of the major that need to be flipped
+     * @return flipped version of orgRow
+     */
     private ArrayList<Boolean> getRestrictedFlippedRow(ArrayList<Boolean> orgRow, int majorIndex) {
         ArrayList<Boolean> flippedRow = new ArrayList<>(orgRow);
         int[] flippingIndices = new int[]{majorIndex, orgRow.size() - 1};
