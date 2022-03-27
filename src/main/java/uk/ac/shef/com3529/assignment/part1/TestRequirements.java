@@ -9,14 +9,18 @@ import uk.ac.shef.com3529.assignment.part1.model.enums.ComparisonRelation;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class TestRequirements {
     private final BinaryRelatedNode<?> root;
     private final HashSet<VariableNode<?>> variables = new HashSet<>();
     private final HashSet<ConditionNode> allConditions = new HashSet<>();
     private ConditionNode[] majors;
-    private ArrayList<ArrayList<Boolean>> fullMultiConditionTable;
+    private ArrayList<ArrayList<Boolean>> fullConditionTable;
     private ArrayList<ArrayList<Boolean>> restrictedConditionTable;
+    private ArrayList<Integer> restrictedTestIndices;
+    private ArrayList<ArrayList<Boolean>> correlatedConditionTable;
+    private ArrayList<Integer> correlatedTestIndices;
 
     //using string as the key for the ConditionNode here cause HashMap doesn't like mutating object as key
     private HashMap<String, ArrayList<ConditionNode>> removedEquivalentConditions = new HashMap<>();
@@ -45,9 +49,9 @@ public class TestRequirements {
         return majors;
     }
 
-    public ArrayList<ArrayList<Boolean>> getFullMultiConditionTable() {
-        if (fullMultiConditionTable != null) {
-            return fullMultiConditionTable;
+    public ArrayList<ArrayList<Boolean>> getFullConditionTable() {
+        if (fullConditionTable != null) {
+            return fullConditionTable;
         }
 
         ArrayList<ArrayList<Boolean>> fullTruthTable = generateBooleanValuesForConditions(majors.length);
@@ -58,8 +62,8 @@ public class TestRequirements {
             row.add(getBranchPredicate());
         }
 
-        fullMultiConditionTable = fullTruthTable;
-        return fullMultiConditionTable;
+        fullConditionTable = fullTruthTable;
+        return fullConditionTable;
     }
 
     public ArrayList<ArrayList<Boolean>> getRestrictedMCDCConditionTable() {
@@ -67,11 +71,24 @@ public class TestRequirements {
             return restrictedConditionTable;
         }
 
+        restrictedConditionTable = new ArrayList<>();
+        for (Integer index : getRestrictedTestIndices()) {
+            restrictedConditionTable.add(getFullConditionTable().get(index));
+        }
+        return restrictedConditionTable;
+    }
+
+    //TODO think about infeasible tests
+    public ArrayList<Integer> getRestrictedTestIndices() {
+        if (restrictedTestIndices != null) {
+            return restrictedTestIndices;
+        }
+
         ArrayList<int[]>[] allRestrictedMCDCPairs = getPossibleRestrictedMCDCPairs();
 
         List<ArrayList<int[]>> restrictedMCDCCombinations = generatePermutations(allRestrictedMCDCPairs);
 
-        //find the index of the test needed for each restrictedMCDCCombination
+        //find the index of the test needed for each restrictedMCDC Combination
         ArrayList<HashSet<Integer>> possibleRestrictedMCDC = new ArrayList<>();
         for (ArrayList<int[]> restrictedMCDCCombination : restrictedMCDCCombinations) {
             HashSet<Integer> row = new HashSet<>();
@@ -83,14 +100,72 @@ public class TestRequirements {
 
         //find the set that require the minimum number of tests
         int minTests = possibleRestrictedMCDC.stream().mapToInt(HashSet::size).min().getAsInt();
-        HashSet<Integer> MCDCIndices = possibleRestrictedMCDC.stream().filter(set -> set.size() == minTests).findFirst().get();
+        restrictedTestIndices = new ArrayList<>(possibleRestrictedMCDC.stream()
+                .filter(set -> set.size() == minTests).findFirst().get());
+        return restrictedTestIndices;
+    }
 
-        //grab the condition from the table
-        restrictedConditionTable = new ArrayList<>();
-        for (Integer index : MCDCIndices) {
-            restrictedConditionTable.add(getFullMultiConditionTable().get(index));
+    public ArrayList<ArrayList<Boolean>> getCorrelatedMCDCConditionTable() {
+        if (correlatedConditionTable != null) {
+            return correlatedConditionTable;
         }
-        return restrictedConditionTable;
+
+        correlatedConditionTable = new ArrayList<>();
+        for (Integer index : getCorrelatedTestIndices()) {
+            correlatedConditionTable.add(getFullConditionTable().get(index));
+        }
+        return correlatedConditionTable;
+    }
+
+    public ArrayList<Integer> getCorrelatedTestIndices() {
+        if (correlatedTestIndices != null) {
+            return correlatedTestIndices;
+        }
+
+        ArrayList<ArrayList<Integer>> newPairs = new ArrayList<>();
+
+        Set<Integer> notUsedTestIndices = IntStream.range(0, fullConditionTable.size()).boxed().collect(Collectors.toSet());
+        notUsedTestIndices.removeAll(new HashSet<>(restrictedTestIndices));
+
+        //check if existing restricted pairs also satisfy correlated or any existing restricted MCDC test has a flipped version in the fullConditionTable
+        for (Integer i : restrictedTestIndices) {
+            ArrayList<Boolean> flippedRow = getCorrelatedFlippedRow(fullConditionTable.get(i));
+            for (Integer j : restrictedTestIndices) {
+                if (fullConditionTable.get(j).equals(flippedRow)) {
+                    correlatedTestIndices = new ArrayList<>(Arrays.asList(i, j));
+                    return correlatedTestIndices;
+                }
+            }
+
+            for (Integer j : notUsedTestIndices) {
+                if (fullConditionTable.get(j).equals(flippedRow)) {
+                    newPairs.add(new ArrayList<>(Arrays.asList(i, j)));
+                }
+            }
+        }
+
+        if (newPairs.size() > 0) {
+            correlatedTestIndices = newPairs.get(0);
+            return correlatedTestIndices;
+        }
+
+        //not used tests compare with not used tests
+        for (Integer i : notUsedTestIndices) {
+            ArrayList<Boolean> flippedRow = getCorrelatedFlippedRow(fullConditionTable.get(i));
+
+            for (Integer j : notUsedTestIndices) {
+                if (fullConditionTable.get(j).equals(flippedRow)) {
+                    correlatedTestIndices = new ArrayList<>(Arrays.asList(i, j));
+                    return correlatedTestIndices;
+                }
+            }
+        }
+
+        //TODO find the ones that require more than two test cases
+        // 1. check if the existing restricted satisfy correlated
+        // 2. find the complementing one if restricted doesn't satisfy
+        correlatedTestIndices = restrictedTestIndices;
+        return correlatedTestIndices;
     }
 
     /**
@@ -136,10 +211,10 @@ public class TestRequirements {
         ArrayList<int[]>[] allCandidates = new ArrayList[majors.length];
 
         for (int i = 0; i < majors.length; i++) {
-            for (int j = 0; j < getFullMultiConditionTable().size(); j++) {
-                ArrayList<Boolean> flippedRow = getRestrictedFlippedRow(fullMultiConditionTable.get(j), i);
-                for (int k = j; k < fullMultiConditionTable.size(); k++) {
-                    if (fullMultiConditionTable.get(k).equals(flippedRow)) {
+            for (int j = 0; j < getFullConditionTable().size(); j++) {
+                ArrayList<Boolean> flippedRow = getRestrictedFlippedRow(fullConditionTable.get(j), i);
+                for (int k = j; k < fullConditionTable.size(); k++) {
+                    if (fullConditionTable.get(k).equals(flippedRow)) {
                         if (allCandidates[i] == null) {
                             allCandidates[i] = new ArrayList<>();
                         }
@@ -191,7 +266,7 @@ public class TestRequirements {
         return flippedRow;
     }
 
-    private ArrayList<Boolean> getFlippedRow(ArrayList<Boolean> orgRow) {
+    private ArrayList<Boolean> getCorrelatedFlippedRow(ArrayList<Boolean> orgRow) {
         ArrayList<Boolean> flippedRow = new ArrayList<>();
         for (boolean val : orgRow) {
             flippedRow.add(!val);

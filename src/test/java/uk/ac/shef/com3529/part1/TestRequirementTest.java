@@ -138,6 +138,6 @@ public class TestRequirementTest {
                 new ArrayList<>(Arrays.asList(true, true, true))
         ));
 
-        assertEquals(expected, objUnderTest.getFullMultiConditionTable());
+        assertEquals(expected, objUnderTest.getFullConditionTable());
     }
 }
