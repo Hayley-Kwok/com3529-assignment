@@ -1,4 +1,4 @@
-package uk.ac.shef.com3529.assignment.part1.model.enums;
+package uk.ac.shef.com3529.assignment.model.enums;
 
 public enum ComparisonRelation {
     EqualsEquals {

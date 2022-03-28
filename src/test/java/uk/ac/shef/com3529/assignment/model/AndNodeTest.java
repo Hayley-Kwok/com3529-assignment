@@ -1,11 +1,8 @@
-package uk.ac.shef.com3529.part1.model;
+package uk.ac.shef.com3529.assignment.model;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import uk.ac.shef.com3529.assignment.part1.model.AndNode;
-import uk.ac.shef.com3529.assignment.part1.model.ConditionNode;
-import uk.ac.shef.com3529.assignment.part1.model.VariableNode;
-import uk.ac.shef.com3529.assignment.part1.model.enums.ComparisonRelation;
+import uk.ac.shef.com3529.assignment.model.enums.ComparisonRelation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

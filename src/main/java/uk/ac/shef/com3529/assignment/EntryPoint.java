@@ -1,4 +1,4 @@
-package uk.ac.shef.com3529.assignment.part1;
+package uk.ac.shef.com3529.assignment;
 
 import java.util.Arrays;
 

@@ -1,6 +1,6 @@
-package uk.ac.shef.com3529.assignment.part1.model;
+package uk.ac.shef.com3529.assignment.model;
 
-import uk.ac.shef.com3529.assignment.part1.model.enums.BinaryRelation;
+import uk.ac.shef.com3529.assignment.model.enums.BinaryRelation;
 
 public class AndNode extends BinaryRelatedNode<BinaryRelation> {
 

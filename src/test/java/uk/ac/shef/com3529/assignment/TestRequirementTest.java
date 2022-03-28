@@ -1,10 +1,9 @@
-package uk.ac.shef.com3529.part1;
+package uk.ac.shef.com3529.assignment;
 
 import org.junit.jupiter.api.Test;
-import uk.ac.shef.com3529.assignment.part1.TestRequirements;
-import uk.ac.shef.com3529.assignment.part1.model.*;
-import uk.ac.shef.com3529.assignment.part1.model.enums.ArithmeticRelation;
-import uk.ac.shef.com3529.assignment.part1.model.enums.ComparisonRelation;
+import uk.ac.shef.com3529.assignment.model.*;
+import uk.ac.shef.com3529.assignment.model.enums.ArithmeticRelation;
+import uk.ac.shef.com3529.assignment.model.enums.ComparisonRelation;
 
 import java.util.ArrayList;
 import java.util.Arrays;

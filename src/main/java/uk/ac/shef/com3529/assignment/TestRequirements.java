@@ -1,10 +1,10 @@
-package uk.ac.shef.com3529.assignment.part1;
+package uk.ac.shef.com3529.assignment;
 
-import uk.ac.shef.com3529.assignment.part1.model.BinaryRelatedNode;
-import uk.ac.shef.com3529.assignment.part1.model.ConditionNode;
-import uk.ac.shef.com3529.assignment.part1.model.SyntaxNode;
-import uk.ac.shef.com3529.assignment.part1.model.VariableNode;
-import uk.ac.shef.com3529.assignment.part1.model.enums.ComparisonRelation;
+import uk.ac.shef.com3529.assignment.model.BinaryRelatedNode;
+import uk.ac.shef.com3529.assignment.model.ConditionNode;
+import uk.ac.shef.com3529.assignment.model.SyntaxNode;
+import uk.ac.shef.com3529.assignment.model.VariableNode;
+import uk.ac.shef.com3529.assignment.model.enums.ComparisonRelation;
 
 import java.util.*;
 import java.util.function.Consumer;
