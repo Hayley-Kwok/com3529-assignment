@@ -8,12 +8,17 @@ import java.util.Objects;
 
 public abstract class BinaryRelatedNode<T> extends SyntaxNode {
     protected T relation;
-    protected boolean result;
+    protected boolean negated;
 
     public BinaryRelatedNode(SyntaxNode leftNode, T relation, SyntaxNode rightNode) {
         this.leftNode = leftNode;
         this.relation = relation;
         this.rightNode = rightNode;
+    }
+
+    public BinaryRelatedNode(SyntaxNode leftNode, T relation, SyntaxNode rightNode, boolean negated) {
+        this(leftNode, relation, rightNode);
+        this.negated = negated;
     }
 
     public abstract boolean getResult();
@@ -27,7 +32,7 @@ public abstract class BinaryRelatedNode<T> extends SyntaxNode {
         if (this == o) return true;
         if (o.getClass() != this.getClass()) return false;
         BinaryRelatedNode<?> that = (BinaryRelatedNode<?>) o;
-        return result == that.result &&
+        return negated == that.negated &&
                 relation.equals(that.relation) &&
                 leftNode.equals(that.leftNode) &&
                 rightNode.equals(that.rightNode);
@@ -35,14 +40,29 @@ public abstract class BinaryRelatedNode<T> extends SyntaxNode {
 
     @Override
     public int hashCode() {
-        return Objects.hash(relation, result, leftNode, rightNode);
+        return Objects.hash(relation, negated, leftNode, rightNode);
     }
 
     @Override
     public String toString() {
-        return "(" +
-                leftNode.toString() + " " +
-                relation.toString() + " " +
-                rightNode.toString() + ")";
+        StringBuilder sb = new StringBuilder();
+
+        if (negated) {
+            sb.append("!");
+        }
+
+        sb.append("(")
+                .append(leftNode.toString()).append(" ")
+                .append(relation.toString()).append(" ")
+                .append(rightNode.toString()).append(")");
+
+        return sb.toString();
+    }
+
+    protected boolean flipResult(boolean result) {
+        if (negated) {
+            return !result;
+        }
+        return result;
     }
 }

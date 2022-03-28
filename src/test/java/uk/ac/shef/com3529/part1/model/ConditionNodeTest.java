@@ -105,6 +105,17 @@ public class ConditionNodeTest {
     }
 
     @ParameterizedTest
+    @CsvSource({"false, true", "true, false"})
+    public void testGetResultNegation(boolean negation, boolean expected) {
+        VariableNode<Integer> leftNode = new VariableNode<>("v1", 7);
+        VariableNode<Integer> rightNode = new VariableNode<>("v2", 6);
+
+        ConditionNode objUnderTest = new ConditionNode(leftNode, ComparisonRelation.LargerThan, rightNode, negation);
+
+        assertEquals(expected, objUnderTest.getResult());
+    }
+
+    @ParameterizedTest
     @CsvSource({"1, EqualsEquals, 1, true", "1, EqualsEquals, 2, false",
             "1, NotEquals, 2, true", "1, NotEquals, 1, false",
             "3, LargerThan, 1, true", "1, LargerThan, 2, false",
@@ -121,19 +132,23 @@ public class ConditionNodeTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"true, true, EqualsEquals, EqualsEquals, true",
-            "true, false, EqualsEquals, EqualsEquals, false,",
-            "true, false, EqualsEquals, NotEquals, false,"})
-    public void testEquals(boolean n1Result, boolean n2Result, String n1relation, String n2relation, boolean expected) {
+    @CsvSource({"true, true, EqualsEquals, EqualsEquals, true, true, true",
+            "true, false, EqualsEquals, EqualsEquals, true, true, false,",
+            "true, true, EqualsEquals, NotEquals, true, true, false,",
+            "true, true, EqualsEquals, EqualsEquals, true, false, false"})
+    public void testEquals(boolean n1Result, boolean n2Result, String n1relation, String n2relation, boolean n1Negation,
+                           boolean n2Negation, boolean expected) {
         ConditionNode n1 = new ConditionNode(
                 new VariableNode<>("condition1", 1),
                 ComparisonRelation.valueOf(n1relation),
-                new VariableNode<>("condition2", 1));
+                new VariableNode<>("condition2", 1),
+                n1Negation);
 
         ConditionNode n2 = new ConditionNode(
                 new VariableNode<>("condition1", 1),
                 ComparisonRelation.valueOf(n2relation),
-                new VariableNode<>("condition2", 1));
+                new VariableNode<>("condition2", 1),
+                n2Negation);
 
         n1.setResult(n1Result);
         n2.setResult(n2Result);
