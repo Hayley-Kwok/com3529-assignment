@@ -330,33 +330,32 @@ public class TestRequirements {
      * Find all the Majors from allCondition and save it to majors field
      */
     private void findMajors() {
-        //TODO flip v1 >= v2 & v2 <= v1 as equivalent
         HashSet<ConditionNode> majorSet = new HashSet<>(allConditions);
 
-        HashSet<ConditionNode> equalsNodes =
-                majorSet.stream().filter(n -> n.getRelation().equals(ComparisonRelation.EqualsEquals)).
-                        collect(Collectors.toCollection(HashSet::new));
-        eliminateEquivalentNodes(equalsNodes, majorSet);
+        HashSet<ConditionNode> equalsNodes = getSubsetConditionNodes(majorSet, ComparisonRelation.EqualsEquals);
+        eliminateEquivalentNodes(equalsNodes, majorSet, ComparisonRelation.EqualsEquals);
         eliminateContradictingNode(equalsNodes, majorSet, ComparisonRelation.NotEquals, true);
 
-        HashSet<ConditionNode> notEqualsNodes =
-                majorSet.stream().filter(n -> n.getRelation().equals(ComparisonRelation.NotEquals)).
-                        collect(Collectors.toCollection(HashSet::new));
-        eliminateEquivalentNodes(notEqualsNodes, majorSet);
+        HashSet<ConditionNode> notEqualsNodes = getSubsetConditionNodes(majorSet, ComparisonRelation.NotEquals);
+        eliminateEquivalentNodes(notEqualsNodes, majorSet, ComparisonRelation.NotEquals);
 
+        HashSet<ConditionNode> largerEqualsNodes = getSubsetConditionNodes(majorSet, ComparisonRelation.LargerOrEqualsTo);
+        eliminateEquivalentNodes(largerEqualsNodes, majorSet, ComparisonRelation.SmallerOrEqualsTo);
 
-        HashSet<ConditionNode> largerThanNodes =
-                majorSet.stream().filter(n -> n.getRelation().equals(ComparisonRelation.LargerThan)).
-                        collect(Collectors.toCollection(HashSet::new));
+        HashSet<ConditionNode> largerThanNodes = getSubsetConditionNodes(majorSet, ComparisonRelation.LargerThan);
+        eliminateEquivalentNodes(largerThanNodes, majorSet, ComparisonRelation.SmallerThan);
         eliminateContradictingNode(largerThanNodes, majorSet, ComparisonRelation.SmallerOrEqualsTo, false);
 
-        HashSet<ConditionNode> smallerThanNodes =
-                majorSet.stream().filter(n -> n.getRelation().equals(ComparisonRelation.SmallerThan)).
-                        collect(Collectors.toCollection(HashSet::new));
+        HashSet<ConditionNode> smallerThanNodes = getSubsetConditionNodes(majorSet, ComparisonRelation.SmallerThan);
         eliminateContradictingNode(smallerThanNodes, majorSet, ComparisonRelation.LargerOrEqualsTo, false);
 
         majors = new ConditionNode[majorSet.size()];
         majorSet.toArray(majors);
+    }
+
+    private HashSet<ConditionNode> getSubsetConditionNodes(HashSet<ConditionNode> set, ComparisonRelation relation) {
+        return set.stream().filter(n -> n.getRelation().equals(relation)).
+                collect(Collectors.toCollection(HashSet::new));
     }
 
     /**
@@ -364,19 +363,19 @@ public class TestRequirements {
      * conditions to removedContradictingConditions so that we can still compute the branch predicate.
      * An example of contradicting conditions is (v1 >= v2) and (v1 < v2)
      *
-     * @param notEqualsNodes    a set of nodes with the same ComparisonRelation
-     * @param majorSet          the set of majors we are updating
-     * @param flippedRelation   the contradicting ComparisonRelation of notEqualsNodes
-     * @param flipLeftRightNode does the method consider flipping leftNode and rightNode. Eg: (v1 == v2) should consider
-     *                          both (v1 != v2) & (v2 != v1) as a contradicting condition
+     * @param notEqualsNodes              a set of nodes with the same ComparisonRelation
+     * @param majorSet                    the set of majors we are updating
+     * @param flippedRelation             the contradicting ComparisonRelation of notEqualsNodes
+     * @param includeFlippedLeftRightNode does the method consider flipping leftNode and rightNode. Eg: (v1 == v2) should consider
+     *                                    both (v1 != v2) & (v2 != v1) as a contradicting condition
      */
     private void eliminateContradictingNode(HashSet<ConditionNode> notEqualsNodes,
                                             HashSet<ConditionNode> majorSet,
                                             ComparisonRelation flippedRelation,
-                                            boolean flipLeftRightNode) {
+                                            boolean includeFlippedLeftRightNode) {
         for (ConditionNode currentNode : notEqualsNodes) {
             ConditionNode[] oppositeNodes;
-            if (flipLeftRightNode) {
+            if (includeFlippedLeftRightNode) {
                 oppositeNodes = new ConditionNode[]{
                         new ConditionNode(currentNode.getLeftNode(), flippedRelation, currentNode.getRightNode()),
                         new ConditionNode(currentNode.getRightNode(), flippedRelation, currentNode.getLeftNode())};
@@ -410,23 +409,27 @@ public class TestRequirements {
     }
 
     /**
-     * This method is for Equals and NotEquals situation as flipping leftNode and rightNode are considered as equivalent.
-     * Eg: c1 == c2 is equivalent as c2 == c1 and one of it should be removed when considering major
+     * This method is for situation that flipping leftNode and rightNode are considered as equivalent.
+     * Eg: v1 == v2 is equivalent as v2 == v1 and one of it should be removed when considering major
+     * Another eg: v1 >= v2 is equivalent as v2 <= v1
      * The equivalent node will be removed from the nonEquivalentConditions & added to removedEquivalentConditions so
      * that the value can still be updated when computing the branch predicate.
      *
      * @param nodeSubset subset of the node that has the same ComparisonRelation
      * @param majorSet   set of major we are considering
+     * @param relation   the relation for the positionSwappedNode
      */
-    private void eliminateEquivalentNodes(HashSet<ConditionNode> nodeSubset, HashSet<ConditionNode> majorSet) {
+    private void eliminateEquivalentNodes(HashSet<ConditionNode> nodeSubset, HashSet<ConditionNode> majorSet, ComparisonRelation relation) {
         for (Iterator<ConditionNode> i = nodeSubset.iterator(); i.hasNext(); ) {
             ConditionNode currentNode = i.next();
 
-            ConditionNode positionSwappedNode = new ConditionNode(currentNode.getRightNode(), currentNode.getRelation(),
+            ConditionNode positionSwappedNode = new ConditionNode(currentNode.getRightNode(), relation,
                     currentNode.getLeftNode());
 
-            if (nodeSubset.contains(positionSwappedNode)) {
-                i.remove();
+            if (majorSet.contains(positionSwappedNode)) {
+                if (nodeSubset.contains(positionSwappedNode)) {
+                    i.remove();
+                }
                 majorSet.remove(currentNode);
                 String key = positionSwappedNode.toString();
                 if (removedEquivalentConditions.containsKey(key)) {

@@ -54,7 +54,7 @@ public class TestRequirementTest {
     }
 
     @Test
-    public void testGetMajorEquivalentEqualsConditions() {
+    public void testGetMajorsEquivalentEqualsConditions() {
         //The predicate is (v1 == v2) && (v2 == v1) && (v1 == v2)
         VariableNode<?> v1 = new VariableNode<Integer>("v1");
         VariableNode<?> v2 = new VariableNode<Double>("v2");
@@ -73,7 +73,39 @@ public class TestRequirementTest {
     }
 
     @Test
-    public void testGetMajorContradictingEqualsConditions() {
+    public void testGetMajorsEquivalentLargerEqualsConditions() {
+        //The predicate is (v1 >= v2) && (v2 <= v1)
+        VariableNode<?> v1 = new VariableNode<Integer>("v1");
+        VariableNode<?> v2 = new VariableNode<Double>("v2");
+
+        ConditionNode c1 = new ConditionNode(v1, ComparisonRelation.LargerOrEqualsTo, v2);
+        ConditionNode c2 = new ConditionNode(v2, ComparisonRelation.SmallerOrEqualsTo, v1);
+
+        TestRequirements objUnderTest = new TestRequirements(new AndNode(c1, c2));
+
+        ConditionNode[] actualMajors = objUnderTest.getMajors();
+        assertTrue(Arrays.equals(actualMajors, new ConditionNode[]{c1}) ||
+                Arrays.equals(actualMajors, new ConditionNode[]{c2}));
+    }
+
+    @Test
+    public void testGetMajorsEquivalentLargerThanConditions() {
+        //The predicate is (v1 > v2) && (v2 < v1)
+        VariableNode<?> v1 = new VariableNode<Integer>("v1");
+        VariableNode<?> v2 = new VariableNode<Double>("v2");
+
+        ConditionNode c1 = new ConditionNode(v1, ComparisonRelation.LargerThan, v2);
+        ConditionNode c2 = new ConditionNode(v2, ComparisonRelation.SmallerThan, v1);
+
+        TestRequirements objUnderTest = new TestRequirements(new AndNode(c1, c2));
+
+        ConditionNode[] actualMajors = objUnderTest.getMajors();
+        assertTrue(Arrays.equals(actualMajors, new ConditionNode[]{c1}) ||
+                Arrays.equals(actualMajors, new ConditionNode[]{c2}));
+    }
+
+    @Test
+    public void testGetMajorsContradictingEqualsConditions() {
         //The predicate is (v1 == v2) && (v2 != v1) && (v1 != v2) || (v2 == v1)
         VariableNode<?> v1 = new VariableNode<Integer>("v1");
         VariableNode<?> v2 = new VariableNode<Double>("v2");
@@ -93,7 +125,7 @@ public class TestRequirementTest {
     }
 
     @Test
-    public void testLargerThanContradictingConditions() {
+    public void testGetMajorsLargerThanContradictingConditions() {
         //The predicate: (v1 > v2) && (v1 <= v2)
         VariableNode<?> v1 = new VariableNode<Integer>("v1");
         VariableNode<?> v2 = new VariableNode<Double>("v2");
@@ -107,7 +139,7 @@ public class TestRequirementTest {
     }
 
     @Test
-    public void testSmallerThanContradictingConditions() {
+    public void testGetMajorsSmallerThanContradictingConditions() {
         //The predicate: (v1 < v2) && (v1 >= v2)
         VariableNode<?> v1 = new VariableNode<Integer>("v1");
         VariableNode<?> v2 = new VariableNode<Double>("v2");
