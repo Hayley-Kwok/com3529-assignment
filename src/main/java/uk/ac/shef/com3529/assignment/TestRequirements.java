@@ -2,19 +2,17 @@ package uk.ac.shef.com3529.assignment;
 
 import uk.ac.shef.com3529.assignment.model.BinaryRelatedNode;
 import uk.ac.shef.com3529.assignment.model.ConditionNode;
-import uk.ac.shef.com3529.assignment.model.SyntaxNode;
 import uk.ac.shef.com3529.assignment.model.VariableNode;
 import uk.ac.shef.com3529.assignment.model.enums.ComparisonRelation;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class TestRequirements {
     private final BinaryRelatedNode<?> root;
-    private final HashSet<VariableNode<?>> variables = new HashSet<>();
-    private final HashSet<ConditionNode> allConditions = new HashSet<>();
+    private final HashSet<VariableNode<?>> variables;
+    private final HashSet<ConditionNode> allConditions;
     private ConditionNode[] majors;
     private ArrayList<ArrayList<Boolean>> fullConditionTable;
     private ArrayList<ArrayList<Boolean>> restrictedConditionTable;
@@ -28,8 +26,10 @@ public class TestRequirements {
 
     public TestRequirements(BinaryRelatedNode<?> root) {
         this.root = root;
-        traverseTree(root, this::addVariableNodeToVariables);
-        traverseTree(root, this::addConditionNodeToConditions);
+
+        NodeHelper nodeHelper = new NodeHelper(root);
+        variables = nodeHelper.getVariables();
+        allConditions = nodeHelper.getConditions();
         findMajors();
     }
 
@@ -49,17 +49,25 @@ public class TestRequirements {
         return majors;
     }
 
+    public HashMap<String, ArrayList<ConditionNode>> getRemovedEquivalentConditions() {
+        return removedEquivalentConditions;
+    }
+
+    public HashMap<String, ArrayList<ConditionNode>> getRemovedContradictingConditions() {
+        return removedContradictingConditions;
+    }
+
     public ArrayList<ArrayList<Boolean>> getFullConditionTable() {
         if (fullConditionTable != null) {
             return fullConditionTable;
         }
 
         ArrayList<ArrayList<Boolean>> fullTruthTable = generateBooleanValuesForConditions(majors.length);
+        BranchPredicate branchPredicate = new BranchPredicate(majors, removedEquivalentConditions,
+                removedContradictingConditions, root, allConditions);
+
         for (ArrayList<Boolean> row : fullTruthTable) {
-            for (int i = 0; i < majors.length; i++) {
-                majors[i].setResult(row.get(i));
-            }
-            row.add(getBranchPredicate());
+            row.add(branchPredicate.getResult(row));
         }
 
         fullConditionTable = fullTruthTable;
@@ -292,40 +300,6 @@ public class TestRequirements {
         return truthTable;
     }
 
-    //called after updating all majors
-    private boolean getBranchPredicate() {
-        for (ConditionNode major : majors) {
-            String key = major.toString();
-            if (removedEquivalentConditions.containsKey(key)) {
-                ArrayList<ConditionNode> equivalentNodes = removedEquivalentConditions.get(key);
-                for (ConditionNode node : equivalentNodes) {
-                    node.setResult(major.getResult());
-                }
-            }
-
-            if (removedContradictingConditions.containsKey(key)) {
-                ArrayList<ConditionNode> contradictingNodes = removedContradictingConditions.get(key);
-                for (ConditionNode node : contradictingNodes) {
-                    node.setResult(!major.getResult());
-                }
-            }
-        }
-        try {
-            makeSureUpdateAllConditions();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return root.getResult();
-    }
-
-    private void makeSureUpdateAllConditions() throws Exception {
-        for (ConditionNode node : allConditions) {
-            if (!node.getResultOverrode()) {
-                throw new Exception("not all node is updated when evaluating branch predicate");
-            }
-        }
-    }
-
     /**
      * Find all the Majors from allCondition and save it to majors field
      */
@@ -441,41 +415,5 @@ public class TestRequirements {
         }
     }
 
-    /**
-     * Add the node into the allConditions set if the type is ConditionNode; Method being used in traverseTree
-     *
-     * @param node a syntaxNode
-     */
-    private void addConditionNodeToConditions(SyntaxNode node) {
-        if (node instanceof ConditionNode) {
-            allConditions.add((ConditionNode) node);
-        }
-    }
 
-    /**
-     * Add the node into the variables set if the type is VariableNode; Method being used in traverseTree
-     *
-     * @param node a syntaxNode
-     */
-    private void addVariableNodeToVariables(SyntaxNode node) {
-        if (node instanceof VariableNode) {
-            variables.add((VariableNode<?>) node);
-        }
-    }
-
-    /**
-     * Looping through the entire syntax tree in order and call the addNodeToSet method on each node
-     *
-     * @param node         root node to the syntax tree
-     * @param addNodeToSet method that take in the current node and do some operation on it
-     */
-    private void traverseTree(SyntaxNode node, Consumer<SyntaxNode> addNodeToSet) {
-        if (node == null) {
-            return;
-        }
-
-        traverseTree(node.getLeftNode(), addNodeToSet);
-        addNodeToSet.accept(node);
-        traverseTree(node.getRightNode(), addNodeToSet);
-    }
 }

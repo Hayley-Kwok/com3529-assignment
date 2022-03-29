@@ -22,6 +22,7 @@ public class ConditionNode extends BinaryRelatedNode<ComparisonRelation> {
 
     public void resetResultOverrode() {
         this.resultOverrode = false;
+        this.result = false;
     }
 
     public void setResult(boolean result) {
