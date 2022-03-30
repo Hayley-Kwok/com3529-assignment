@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.function.Consumer;
 
 public class NodeHelper {
-    private final HashSet<VariableNode<?>> variables = new HashSet<>();
+    private final HashSet<VariableNode<?>> variablesSet = new HashSet<>();
     private final HashSet<ConditionNode> conditions = new HashSet<>();
 
     public NodeHelper(SyntaxNode root) {
@@ -16,8 +16,8 @@ public class NodeHelper {
         traverseTree(root, this::addConditionNodeToConditions);
     }
 
-    public HashSet<VariableNode<?>> getVariables() {
-        return variables;
+    public VariableNode<?>[] getVariables() {
+        return variablesSet.stream().sorted().toArray(VariableNode[]::new);
     }
 
     public HashSet<ConditionNode> getConditions() {
@@ -42,7 +42,7 @@ public class NodeHelper {
      */
     private void addVariableNodeToVariables(SyntaxNode node) {
         if (node instanceof VariableNode) {
-            variables.add((VariableNode<?>) node);
+            variablesSet.add((VariableNode<?>) node);
         }
     }
 

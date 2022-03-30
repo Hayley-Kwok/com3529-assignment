@@ -3,7 +3,7 @@ package uk.ac.shef.com3529.assignment.model;
 import java.util.Objects;
 
 //T would be the type of the variable (identifier)
-public class VariableNode<T extends Number> extends SyntaxNode {
+public class VariableNode<T extends Number> extends SyntaxNode implements Comparable<VariableNode<T>> {
     private T max; //exclusive
     private T min; //inclusive
     private final Class<T> type;
@@ -43,6 +43,10 @@ public class VariableNode<T extends Number> extends SyntaxNode {
         this(t, name, value);
         this.max = max;
         this.min = min;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Class<T> getType() {
@@ -85,5 +89,10 @@ public class VariableNode<T extends Number> extends SyntaxNode {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public int compareTo(VariableNode that) {
+        return this.name.compareTo(that.getName());
     }
 }

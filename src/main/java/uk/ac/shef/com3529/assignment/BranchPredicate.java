@@ -2,7 +2,6 @@ package uk.ac.shef.com3529.assignment;
 
 import uk.ac.shef.com3529.assignment.model.BinaryRelatedNode;
 import uk.ac.shef.com3529.assignment.model.ConditionNode;
-import uk.ac.shef.com3529.assignment.model.VariableNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,12 +27,9 @@ public class BranchPredicate {
         this.allConditions = allConditions;
     }
 
-    public boolean getResult(ArrayList<? extends Number> variableValues, VariableNode<?>[] variables) {
+    public boolean getResult() {
         allConditions.forEach(ConditionNode::resetResultOverrode);
-        for (int i = 0; i < variableValues.size(); i++) {
-            variables[i].setValue(variableValues.get(i));
-        }
-        updateNonMajors();
+//        updateNonMajors();
         return root.getResult();
     }
 

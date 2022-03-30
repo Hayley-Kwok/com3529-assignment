@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 
 public class TestRequirements {
     private final BinaryRelatedNode<?> root;
-    private final HashSet<VariableNode<?>> variables;
+    private final VariableNode<?>[] variables;
     private final HashSet<ConditionNode> allConditions;
     private ConditionNode[] majors;
     private ArrayList<ArrayList<Boolean>> fullConditionTable;
@@ -37,7 +37,7 @@ public class TestRequirements {
         return root;
     }
 
-    public HashSet<VariableNode<?>> getVariables() {
+    public VariableNode<?>[] getVariables() {
         return variables;
     }
 
