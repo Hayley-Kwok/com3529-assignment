@@ -19,9 +19,9 @@ public class ParsedExamples {
      * (side1 != side2 || side2 != side3))
      */
     public static BinaryRelatedNode<?> getTrianglePractical() {
-        SyntaxNode side1 = new VariableNode<Integer>("side1");
-        SyntaxNode side2 = new VariableNode<Integer>("side2");
-        SyntaxNode side3 = new VariableNode<Integer>("side3");
+        SyntaxNode side1 = new VariableNode<>(Integer.class, "side1", 1, 20);
+        SyntaxNode side2 = new VariableNode<>(Integer.class, "side2", 1, 20);
+        SyntaxNode side3 = new VariableNode<>(Integer.class, "side3", 1, 20);
 
         SyntaxNode c1 = new ConditionNode
                 (new ArithmeticNode(side1, ArithmeticRelation.Add, side2),

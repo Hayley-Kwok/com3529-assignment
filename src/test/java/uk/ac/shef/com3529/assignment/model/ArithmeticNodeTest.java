@@ -12,9 +12,9 @@ public class ArithmeticNodeTest {
     @CsvSource({"1, 1, Add, 2", "-1, -1, Minus, 0", "-1, -2, Multiply, 2", "2.4, 1.2, Divide, 2"})
     public void getResultTest(double leftNodeVal, double rightNodeVal, String relation, double expectedVal) {
         ArithmeticNode objUnderTest = new ArithmeticNode(
-                new VariableNode<>("v1", leftNodeVal),
+                new VariableNode<>(Double.class, "v1", leftNodeVal),
                 ArithmeticRelation.valueOf(relation),
-                new VariableNode<>("v2", rightNodeVal));
+                new VariableNode<>(Double.class, "v2", rightNodeVal));
 
         assertEquals(expectedVal, objUnderTest.getResult());
     }
@@ -33,15 +33,15 @@ public class ArithmeticNodeTest {
     public void equalsTest(String node1LeftName, int node1LeftVal, String node1RightName, int node1RightVal,
                            String node2LeftName, int node2LeftVal, String node2RightName, int node2RightVal,
                            String node1Relation, String node2Relation, boolean expectedVal) {
-        ArithmeticNode node1 =  new ArithmeticNode(
-                new VariableNode<>(node1LeftName, node1LeftVal),
+        ArithmeticNode node1 = new ArithmeticNode(
+                new VariableNode<>(Integer.class, node1LeftName, node1LeftVal),
                 ArithmeticRelation.valueOf(node1Relation),
-                new VariableNode<>(node1RightName, node1RightVal));
+                new VariableNode<>(Integer.class, node1RightName, node1RightVal));
 
-        ArithmeticNode node2 =  new ArithmeticNode(
-                new VariableNode<>(node2LeftName, node2LeftVal),
+        ArithmeticNode node2 = new ArithmeticNode(
+                new VariableNode<>(Integer.class, node2LeftName, node2LeftVal),
                 ArithmeticRelation.valueOf(node2Relation),
-                new VariableNode<>(node2RightName, node2RightVal));
+                new VariableNode<>(Integer.class, node2RightName, node2RightVal));
 
         assertEquals(expectedVal, node1.hashCode() == node2.hashCode());
         assertEquals(node1.equals(node2), expectedVal);

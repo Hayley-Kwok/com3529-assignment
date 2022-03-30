@@ -17,8 +17,8 @@ public class TestRequirementTest {
     @Test
     public void testGetMajorsEquivalentEqualsConditions() {
         //The predicate is (v1 == v2) && (v2 == v1) && (v1 == v2)
-        VariableNode<?> v1 = new VariableNode<Integer>("v1");
-        VariableNode<?> v2 = new VariableNode<Double>("v2");
+        VariableNode<?> v1 = new VariableNode<>(Integer.class, "v1");
+        VariableNode<?> v2 = new VariableNode<>(Integer.class, "v2");
 
         ConditionNode c1 = new ConditionNode(v1, ComparisonRelation.EqualsEquals, v2);
         ConditionNode c2 = new ConditionNode(v2, ComparisonRelation.EqualsEquals, v1);
@@ -36,8 +36,8 @@ public class TestRequirementTest {
     @Test
     public void testGetMajorsEquivalentLargerEqualsConditions() {
         //The predicate is (v1 >= v2) && (v2 <= v1)
-        VariableNode<?> v1 = new VariableNode<Integer>("v1");
-        VariableNode<?> v2 = new VariableNode<Double>("v2");
+        VariableNode<?> v1 = new VariableNode<>(Integer.class, "v1");
+        VariableNode<?> v2 = new VariableNode<>(Integer.class, "v2");
 
         ConditionNode c1 = new ConditionNode(v1, ComparisonRelation.LargerOrEqualsTo, v2);
         ConditionNode c2 = new ConditionNode(v2, ComparisonRelation.SmallerOrEqualsTo, v1);
@@ -52,8 +52,8 @@ public class TestRequirementTest {
     @Test
     public void testGetMajorsEquivalentLargerThanConditions() {
         //The predicate is (v1 > v2) && (v2 < v1)
-        VariableNode<?> v1 = new VariableNode<Integer>("v1");
-        VariableNode<?> v2 = new VariableNode<Double>("v2");
+        VariableNode<?> v1 = new VariableNode<>(Integer.class, "v1");
+        VariableNode<?> v2 = new VariableNode<>(Integer.class, "v2");
 
         ConditionNode c1 = new ConditionNode(v1, ComparisonRelation.LargerThan, v2);
         ConditionNode c2 = new ConditionNode(v2, ComparisonRelation.SmallerThan, v1);
@@ -68,8 +68,8 @@ public class TestRequirementTest {
     @Test
     public void testGetMajorsContradictingEqualsConditions() {
         //The predicate is (v1 == v2) && (v2 != v1) && (v1 != v2) || (v2 == v1)
-        VariableNode<?> v1 = new VariableNode<Integer>("v1");
-        VariableNode<?> v2 = new VariableNode<Double>("v2");
+        VariableNode<?> v1 = new VariableNode<>(Integer.class, "v1");
+        VariableNode<?> v2 = new VariableNode<>(Integer.class, "v2");
 
         ConditionNode c1 = new ConditionNode(v1, ComparisonRelation.EqualsEquals, v2);
         ConditionNode c2 = new ConditionNode(v2, ComparisonRelation.NotEquals, v1);
@@ -88,8 +88,8 @@ public class TestRequirementTest {
     @Test
     public void testGetMajorsLargerThanContradictingConditions() {
         //The predicate: (v1 > v2) && (v1 <= v2)
-        VariableNode<?> v1 = new VariableNode<Integer>("v1");
-        VariableNode<?> v2 = new VariableNode<Double>("v2");
+        VariableNode<?> v1 = new VariableNode<>(Integer.class, "v1");
+        VariableNode<?> v2 = new VariableNode<>(Integer.class, "v2");
 
         ConditionNode c1 = new ConditionNode(v1, ComparisonRelation.LargerThan, v2);
         ConditionNode c2 = new ConditionNode(v1, ComparisonRelation.SmallerOrEqualsTo, v2);
@@ -102,8 +102,8 @@ public class TestRequirementTest {
     @Test
     public void testGetMajorsSmallerThanContradictingConditions() {
         //The predicate: (v1 < v2) && (v1 >= v2)
-        VariableNode<?> v1 = new VariableNode<Integer>("v1");
-        VariableNode<?> v2 = new VariableNode<Double>("v2");
+        VariableNode<?> v1 = new VariableNode<>(Integer.class, "v1");
+        VariableNode<?> v2 = new VariableNode<>(Integer.class, "v2");
 
         ConditionNode c1 = new ConditionNode(v1, ComparisonRelation.SmallerThan, v2);
         ConditionNode c2 = new ConditionNode(v1, ComparisonRelation.LargerOrEqualsTo, v2);
@@ -116,8 +116,8 @@ public class TestRequirementTest {
     @Test
     public void testGetFullMultiConditionTable() {
         //The predicate: (v1 < v2) || (v1 == v2)
-        VariableNode<?> v1 = new VariableNode<Integer>("v1");
-        VariableNode<?> v2 = new VariableNode<Double>("v2");
+        VariableNode<?> v1 = new VariableNode<>(Integer.class, "v1");
+        VariableNode<?> v2 = new VariableNode<>(Integer.class, "v2");
 
         ConditionNode c1 = new ConditionNode(v1, ComparisonRelation.SmallerThan, v2);
         ConditionNode c2 = new ConditionNode(v1, ComparisonRelation.EqualsEquals, v2);
