@@ -2,13 +2,15 @@ package uk.ac.shef.com3529.assignment.model;
 
 import java.util.Objects;
 
-//T would be the type of the variable (identifier)
+//T would be the type of the variable
 public class VariableNode<T extends Number> extends SyntaxNode implements Comparable<VariableNode<T>> {
+    private final Class<T> type;
+    private final String name;
+
     private T max; //exclusive
     private T min; //inclusive
-    private final Class<T> type;
-    protected String name;
-    protected T value;
+    private T value;
+    private boolean valueSet;
 
     public VariableNode(Class<T> t, String name) {
         this.name = name;
@@ -65,7 +67,16 @@ public class VariableNode<T extends Number> extends SyntaxNode implements Compar
         return value;
     }
 
+    public boolean isValueSet() {
+        return valueSet;
+    }
+
+    public void setValueSet(boolean valueSet) {
+        this.valueSet = valueSet;
+    }
+
     public void setValue(Number value) {
+        valueSet = true;
         this.value = (T) value;
     }
 
@@ -78,12 +89,13 @@ public class VariableNode<T extends Number> extends SyntaxNode implements Compar
                 min.equals(that.min) &&
                 type.equals(that.type) &&
                 name.equals(that.name) &&
+                valueSet == that.valueSet &&
                 Objects.equals(value, that.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, value, min, max, type);
+        return Objects.hash(name, value, min, max, type, valueSet);
     }
 
     @Override

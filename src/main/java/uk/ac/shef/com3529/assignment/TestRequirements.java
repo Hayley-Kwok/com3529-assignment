@@ -86,7 +86,7 @@ public class TestRequirements {
         return restrictedConditionTable;
     }
 
-    //TODO think about infeasible tests
+    //TODO think about majors that doesn't has any pair (infeasible major)
     public ArrayList<Integer> getRestrictedTestIndices() {
         if (restrictedTestIndices != null) {
             return restrictedTestIndices;

@@ -6,7 +6,9 @@ import uk.ac.shef.com3529.assignment.model.VariableNode;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 //1 TestRequirement -> 1 Branch Predicate -> 1 TestCase
 public class TestSuite {
@@ -29,12 +31,18 @@ public class TestSuite {
         importString.add(importStatementForTestFunction);
         requirements = testRequirements;
 
-        generateParameterizedTestCase(requirements.get(0));
+        generateTestCases();
         writeToFile();
     }
 
+    private void generateTestCases() {
+        for (TestRequirements requirement : requirements) {
+            generateParameterizedTestCase(requirement);
+        }
+    }
+
     private void generateParameterizedTestCase(TestRequirements requirement) {
-        Map<Integer, ArrayList<Number>> inputs = new HashMap<>();
+        ArrayList<CsvSourceInput> inputs = new ArrayList<>();
         InputParameters parameters = new InputParameters(requirement.getRoot(),
                 requirement.getVariables(),
                 requirement.getAllConditions(),
@@ -42,16 +50,19 @@ public class TestSuite {
                 requirement.getRemovedEquivalentConditions(),
                 requirement.getRemovedContradictingConditions());
 
-        for (int index : requirement.getRestrictedTestIndices()) {
-            parameters.updateValueInVariableNodeForRow(requirement.getFullConditionTable().get(index));
+        for (int testIndex : requirement.getRestrictedTestIndices()) {
+            boolean feasible = parameters.findValueForVariablesForRow(requirement.getFullConditionTable().get(testIndex));
 
             ArrayList<Number> values = new ArrayList<>();
-            for (VariableNode<?> variableNode : requirement.getVariables()) {
-                values.add(variableNode.getValue());
+            if (feasible) {
+                for (VariableNode<?> variableNode : requirement.getVariables()) {
+                    values.add(variableNode.getValue());
+                }
             }
-            inputs.put(index, values);
+            inputs.add(new CsvSourceInput(requirement.getFullConditionTable().get(testIndex), testIndex, values));
         }
-        ParameterizedTestCase testCase = new ParameterizedTestCase(importString, requirement.getVariables(), "restrictedTest", inputs);
+        ParameterizedTestCase testCase =
+                new ParameterizedTestCase(importString, requirement.getVariables(), "restrictedTest", inputs);
         testCases.add(testCase.getTestCaseString());
     }
 
@@ -63,6 +74,11 @@ public class TestSuite {
             sb.append(String.join("", importString));
             sb.append("\n\n");
             sb.append(String.format(ClassDefinition, className));
+            sb.append(
+                    "    private boolean test(" + TestGenerationHelper.generateParametersSignature(requirements.get(0).getVariables()) + ") {\n" +
+                            "        return " + requirements.get(0).getRoot().toString() + ";\n" +
+                            "    }\n\n"
+            );
             sb.append(String.join("\n", testCases));
             sb.append("}");
             writer.write(sb.toString());

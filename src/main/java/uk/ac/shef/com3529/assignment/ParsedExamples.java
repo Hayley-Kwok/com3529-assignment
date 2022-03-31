@@ -6,22 +6,16 @@ import uk.ac.shef.com3529.assignment.model.enums.ComparisonRelation;
 
 public class ParsedExamples {
 
-    private boolean test(int side1, int side2, int side3) {
-        return (side1 + side2 >= side3 &&
-                (side1 == side2 || side2 == side3) &&
-                (side1 != side2 || side2 != side3));
-    }
-
     /**
      * Return the root node for the following branch predicate from week 3 practical sheet
-     * if (side1 + side2 >= side3 &&
+     * if (side1 + side2 > side3) &&
      * (side1 == side2 || side2 == side3) &&
      * (side1 != side2 || side2 != side3))
      */
     public static BinaryRelatedNode<?> getTrianglePractical() {
-        SyntaxNode side1 = new VariableNode<>(Integer.class, "side1", 1, 20);
-        SyntaxNode side2 = new VariableNode<>(Integer.class, "side2", 1, 20);
-        SyntaxNode side3 = new VariableNode<>(Integer.class, "side3", 1, 20);
+        SyntaxNode side1 = new VariableNode<>(Integer.class, "side1", 1, 10);
+        SyntaxNode side2 = new VariableNode<>(Integer.class, "side2", 1, 10);
+        SyntaxNode side3 = new VariableNode<>(Integer.class, "side3", 1, 10);
 
         SyntaxNode c1 = new ConditionNode
                 (new ArithmeticNode(side1, ArithmeticRelation.Add, side2),
@@ -37,5 +31,14 @@ public class ParsedExamples {
         SyntaxNode conjunct3 = new OrNode(c4, c5);
         return new AndNode(new AndNode(c1, conjunct2), conjunct3);
     }
+
+    public static BinaryRelatedNode<?> getEasierExample() {
+        //side1 == side2
+        SyntaxNode side1 = new VariableNode<>(Integer.class, "side1", 1, 100);
+        SyntaxNode side2 = new VariableNode<>(Integer.class, "side2", 1, 100);
+
+        return new ConditionNode(side1, ComparisonRelation.EqualsEquals, side2);
+    }
+
 
 }

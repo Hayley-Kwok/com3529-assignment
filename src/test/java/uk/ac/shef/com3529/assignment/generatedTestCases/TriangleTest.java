@@ -4,24 +4,28 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Triangle;
 
-import java.util.Arrays;
 import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TriangleTest {
+    private boolean test(int side1, int side2, int side3) {
+        return (((side1 + side2 > side3) && ((side1 == side2) || (side2 == side3))) && ((side1 != side2) || (side2 != side3)));
+    }
+
     @ParameterizedTest
     @CsvSource({
-            " 8, 5, 6",  //1
-            " 6, 6, 1",  //4
-            " 16, 13, 19",  //5
-            " 19, 8, 19",  //6
+            " 4, 4, 8, false",  //Test ID 1: [false, false, true, false]
+            " 6, 4, 8, false",  //Test ID 4: [true, false, false, false]
+            " 9, 9, 5, true",  //Test ID 5: [true, false, true, true]
+            " 8, 3, 3, true",  //Test ID 6: [true, true, false, true]
     })
-    public void restrictedTest(int v1, int v2, int v3) {
+    public void restrictedTest(int side1, int side2, int side3, boolean expected) {
         HashSet<Integer> coveredBranches = new HashSet<>();
-        Triangle.instrumentedClassify(v1, v2, v3, coveredBranches);
+        String type = Triangle.instrumentedClassify(side1, side2, side3, coveredBranches);
 
-        HashSet<Integer> expectedCoveredBranches = new HashSet<>(Arrays.asList(2, 3, 5, 7));
-        assertTrue(coveredBranches.containsAll(expectedCoveredBranches));
+        System.out.println(type);
+        System.out.println(coveredBranches);
+        assertEquals(expected, test(side1, side2, side3));
     }
 }

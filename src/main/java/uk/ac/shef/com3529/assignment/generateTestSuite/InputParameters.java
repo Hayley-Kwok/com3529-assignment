@@ -4,11 +4,12 @@ import uk.ac.shef.com3529.assignment.BranchPredicate;
 import uk.ac.shef.com3529.assignment.model.BinaryRelatedNode;
 import uk.ac.shef.com3529.assignment.model.ConditionNode;
 import uk.ac.shef.com3529.assignment.model.VariableNode;
+import uk.ac.shef.com3529.assignment.model.enums.ComparisonRelation;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class InputParameters {
-    private final BinaryRelatedNode<?> root;
     private final VariableNode<?>[] variables;
     private final HashSet<ConditionNode> allConditions;
     private final ConditionNode[] majors;
@@ -22,7 +23,6 @@ public class InputParameters {
                            ConditionNode[] majors,
                            HashMap<String, ArrayList<ConditionNode>> removedEquivalentConditions,
                            HashMap<String, ArrayList<ConditionNode>> removedContradictingConditions) {
-        this.root = root;
         this.variables = variables;
         this.allConditions = allConditions;
         this.majors = majors;
@@ -32,15 +32,54 @@ public class InputParameters {
         branchPredicate = new BranchPredicate(majors, removedEquivalentConditions, removedContradictingConditions, root, allConditions);
     }
 
-    public void updateValueInVariableNodeForRow(ArrayList<Boolean> row) {
+    public boolean findValueForVariablesForRow(ArrayList<Boolean> row) {
         allConditions.forEach(ConditionNode::resetResultOverrode);
-
+        ArrayList<ConditionWithExpectedValue> conditionWithExpectedValues = generateConditionWithExpectedValues(row);
+        int counter = 0;
         do {
-            setRandomValueForVariables();
-        } while (checkIfValueSatisfyConditions(row));
+            Arrays.stream(variables).forEach(v -> v.setValueSet(false));
+
+            List<ConditionWithExpectedValue> equalsConditions = conditionWithExpectedValues.stream()
+                    .filter(c -> (c.getRelation().equals(ComparisonRelation.EqualsEquals) && c.getExpectedValue()) ||
+                            (c.getRelation().equals(ComparisonRelation.NotEquals) && !c.getExpectedValue()))
+                    .collect(Collectors.toList());
+
+            for (ConditionWithExpectedValue equalsCondition : equalsConditions) {
+                Number number = getRandomValueForVariable(
+                        equalsCondition.getInvolvedVariables()[0].getType(),
+                        equalsCondition.getInvolvedVariables()[0].getMin(),
+                        equalsCondition.getInvolvedVariables()[0].getMax());
+                Arrays.stream(equalsCondition.getInvolvedVariables()).filter(v -> !v.isValueSet()).forEach(c -> c.setValue(number));
+            }
+
+            List<VariableNode<?>> notSetVariables = Arrays.stream(variables).filter(v -> !v.isValueSet()).collect(Collectors.toList());
+            for (VariableNode<?> variable : notSetVariables) {
+                Number number = getRandomValueForVariable(variable.getType(), variable.getMin(), variable.getMax());
+                variable.setValue(number);
+            }
+            counter++;
+        } while (!checkIfValuesSatisfyCondition(row) && counter < 1000);
+        System.out.println(counter);
+        return counter < 1000;
     }
 
-    private boolean checkIfValueSatisfyConditions(ArrayList<Boolean> row) {
+    private ArrayList<ConditionWithExpectedValue> generateConditionWithExpectedValues(ArrayList<Boolean> row) {
+        ArrayList<ConditionWithExpectedValue> conditionWithExpectedValues = new ArrayList<>();
+        for (int i = 0; i < majors.length; i++) {
+            conditionWithExpectedValues.add(new ConditionWithExpectedValue(majors[i], row.get(i)));
+        }
+        for (Map.Entry<String, ArrayList<ConditionNode>> contradictingEntry : removedContradictingConditions.entrySet()) {
+            ConditionNode major = Arrays.stream(majors).filter(m -> m.toString().equals(contradictingEntry.getKey())).findFirst().get();
+            int majorIndex = Arrays.asList(majors).indexOf(major);
+            for (ConditionNode node : contradictingEntry.getValue()) {
+                conditionWithExpectedValues.add(new ConditionWithExpectedValue(node, !row.get(majorIndex)));
+            }
+        }
+        //todo add equivalent as well
+        return conditionWithExpectedValues;
+    }
+
+    private boolean checkIfValuesSatisfyCondition(ArrayList<Boolean> row) {
         for (int i = 0; i < majors.length; i++) {
             if (row.get(i) != majors[i].getResult()) {
                 return false;
@@ -56,28 +95,21 @@ public class InputParameters {
             }
         }
 
+        //todo add equivalent as well
+
         return branchPredicate.getResult() == row.get(row.size() - 1);
     }
 
-
-    private void setRandomValueForVariables() {
-        for (VariableNode<?> variable : variables) {
-            Random random = new Random();
-            if (variable.getType().equals(Integer.class)) {
-                int randomInt = random.ints(variable.getMin().intValue(), variable.getMax().intValue()).findFirst().getAsInt();
-                variable.setValue(randomInt);
-            } else if (variable.getType().equals(Long.class)) {
-                long randomLong = random.longs(variable.getMin().longValue(), variable.getMax().longValue()).findFirst().getAsLong();
-                variable.setValue(randomLong);
-            } else if (variable.getType().equals(Float.class)) {
-                float randomFloat = variable.getMin().floatValue() + random.nextFloat() * (variable.getMax().floatValue() - variable.getMin().floatValue());
-                variable.setValue(randomFloat);
-            } else {
-                double randomDouble = random.doubles(variable.getMin().doubleValue(), variable.getMax().doubleValue()).findFirst().getAsDouble();
-                variable.setValue(randomDouble);
-            }
+    private Number getRandomValueForVariable(Class<?> type, Number min, Number max) {
+        Random random = new Random();
+        if (type.equals(Integer.class)) {
+            return random.ints(min.intValue(), max.intValue()).findFirst().getAsInt();
+        } else if (type.equals(Long.class)) {
+            return random.longs(min.longValue(), max.longValue()).findFirst().getAsLong();
+        } else if (type.equals(Float.class)) {
+            return min.floatValue() + random.nextFloat() * (max.floatValue() - min.floatValue());
+        } else {
+            return random.doubles(min.doubleValue(), max.doubleValue()).findFirst().getAsDouble();
         }
     }
-
-
 }

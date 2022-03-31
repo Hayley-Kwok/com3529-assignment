@@ -4,22 +4,21 @@ import uk.ac.shef.com3529.assignment.model.VariableNode;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Map;
 
 public class ParameterizedTestCase {
 
-    private HashSet<String> importString;
+    private final HashSet<String> importString;
     private String testCaseString;
-    private String methodName;
-    private VariableNode<?>[] variables;
-    private Map<Integer, ArrayList<Number>> csvSources;
+    private final String methodName;
+    private final VariableNode<?>[] variables;
+    private final ArrayList<CsvSourceInput> inputValues;
 
     public ParameterizedTestCase(HashSet<String> importString, VariableNode<?>[] variables, String methodName,
-                                 Map<Integer, ArrayList<Number>> csvSources) {
+                                 ArrayList<CsvSourceInput> inputValues) {
         this.importString = importString;
         this.variables = variables;
         this.methodName = methodName;
-        this.csvSources = csvSources;
+        this.inputValues = inputValues;
 
         addImportString();
     }
@@ -32,42 +31,58 @@ public class ParameterizedTestCase {
         testCaseString =
                 "    @ParameterizedTest\n" +
                         "    @CsvSource({" +
-                        generateCsvSource() +
-                        "                })\n" +
-                        "    public void " + methodName + "(int v1, int v2, int v3) {\n" +
+                        generateCsvSourceValues() +
+                        "              })\n" +
+                        "    public void " + methodName + "(" + TestGenerationHelper.generateParametersSignature(variables) + ", boolean expected) {\n" +
                         "        HashSet<Integer> coveredBranches = new HashSet<>();\n" +
-                        "        Triangle.instrumentedClassify(v1,v2,v3, coveredBranches);\n" +
+                        "        String type = Triangle.instrumentedClassify(side1, side2, side3, coveredBranches);\n" +
                         "\n" +
-                        "        HashSet<Integer> expectedCoveredBranches = new HashSet<>(Arrays.asList(2,3,5,7));\n" +
-                        "        assertTrue(coveredBranches.containsAll(expectedCoveredBranches));\n" +
+                        "        System.out.println(type);\n" +
+                        "        System.out.println(coveredBranches);\n" +
+//                        "        HashSet<Integer> expectedCoveredBranches = new HashSet<>(Arrays.asList(2,3,5,7));\n" +
+//                        "        assertTrue(coveredBranches.containsAll(expectedCoveredBranches));\n" +
+                        "        assertEquals(expected, test(side1, side2, side3));\n" +
                         "    }\n";
         return testCaseString;
     }
 
-    private String generateCsvSource() {
+    private String generateCsvSourceValues() {
         StringBuilder sb = new StringBuilder();
         sb.append("\n");
-        for (Map.Entry<Integer, ArrayList<Number>> csvSource : csvSources.entrySet()) {
-            sb.append("                \"");
-            for (Number value : csvSource.getValue()) {
+        for (CsvSourceInput input : inputValues) {
+            ArrayList<Boolean> truthValues = input.getTruthValues();
+            sb.append("                ");
+
+            //generate the input parameters
+            if (input.getVariableValues().size() == 0) {
+                sb.append("// the program cannot find the input that satisfy this test requirement. Try rerunning the program. ");
+            } else {
+                sb.append("\"");
+                for (Number value : input.getVariableValues()) {
+                    sb.append(" ");
+                    sb.append(value);
+                    sb.append(",");
+                }
                 sb.append(" ");
-                sb.append(value);
-                sb.append(",");
+                sb.append(truthValues.get(truthValues.size() - 1));
+
+                sb.append("\", ");
+                sb.append(" //");
             }
-            sb.setLength(sb.length() - 1);
-            sb.append("\", ");
-            sb.append(" //");
-            sb.append(csvSource.getKey());
+            //add the test information for this input
+            sb.append("Test ID ");
+            sb.append(input.getTestIndex());
+            sb.append(": ");
+            sb.append(truthValues);
             sb.append("\n");
         }
-//        sb.setLength(sb.length() - 2);
         return sb.toString();
     }
 
     private void addImportString() {
         importString.add("import org.junit.jupiter.params.ParameterizedTest;\n");
         importString.add("import org.junit.jupiter.params.provider.CsvSource;\n");
-        importString.add("import static org.junit.jupiter.api.Assertions.assertTrue;\n");
+        importString.add("import static org.junit.jupiter.api.Assertions.assertEquals;\n");
         importString.add("import java.util.Arrays;\n");
         importString.add("import java.util.HashSet;\n");
     }
