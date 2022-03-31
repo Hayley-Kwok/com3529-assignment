@@ -12,13 +12,15 @@ public class ParameterizedTestCase {
     private final String methodName;
     private final VariableNode<?>[] variables;
     private final ArrayList<CsvSourceInput> inputValues;
+    private final String testFunctionCall;
 
     public ParameterizedTestCase(HashSet<String> importString, VariableNode<?>[] variables, String methodName,
-                                 ArrayList<CsvSourceInput> inputValues) {
+                                 ArrayList<CsvSourceInput> inputValues, String testFunctionCall) {
         this.importString = importString;
         this.variables = variables;
         this.methodName = methodName;
         this.inputValues = inputValues;
+        this.testFunctionCall = testFunctionCall;
 
         addImportString();
     }
@@ -35,13 +37,12 @@ public class ParameterizedTestCase {
                         "              })\n" +
                         "    public void " + methodName + "(" + TestGenerationHelper.generateParametersSignature(variables) + ", boolean expected) {\n" +
                         "        HashSet<Integer> coveredBranches = new HashSet<>();\n" +
-                        "        String type = Triangle.instrumentedClassify(side1, side2, side3, coveredBranches);\n" +
+                        "        boolean actualBranchResult =" + String.format(testFunctionCall, TestGenerationHelper.generateOnlyNameSignature(variables)) +
                         "\n" +
-                        "        System.out.println(type);\n" +
                         "        System.out.println(coveredBranches);\n" +
 //                        "        HashSet<Integer> expectedCoveredBranches = new HashSet<>(Arrays.asList(2,3,5,7));\n" +
 //                        "        assertTrue(coveredBranches.containsAll(expectedCoveredBranches));\n" +
-                        "        assertEquals(expected, test(side1, side2, side3));\n" +
+                        "        assertEquals(expected, actualBranchResult);\n" +
                         "    }\n";
         return testCaseString;
     }
@@ -55,7 +56,7 @@ public class ParameterizedTestCase {
 
             //generate the input parameters
             if (input.getVariableValues().size() == 0) {
-                sb.append("// the program cannot find the input that satisfy this test requirement. Try rerunning the program. ");
+                sb.append("// The program cannot find the input that satisfy this test requirement. This could mean that this requirement is infeasible.");
             } else {
                 sb.append("\"");
                 for (Number value : input.getVariableValues()) {

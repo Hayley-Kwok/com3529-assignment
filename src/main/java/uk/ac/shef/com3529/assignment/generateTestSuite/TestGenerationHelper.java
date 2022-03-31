@@ -27,4 +27,13 @@ public class TestGenerationHelper {
         }
     }
 
+    public static String generateOnlyNameSignature(VariableNode<?>[] variables) {
+        StringBuilder sb = new StringBuilder();
+        for (VariableNode<?> variable : variables) {
+            sb.append(variable.getName());
+            sb.append(", ");
+        }
+        sb.setLength(sb.length() - 2);
+        return sb.toString();
+    }
 }

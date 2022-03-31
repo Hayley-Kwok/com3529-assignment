@@ -9,7 +9,7 @@ import uk.ac.shef.com3529.assignment.model.enums.ComparisonRelation;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class InputParameters {
+public class NumberValuesForInputs {
     private final VariableNode<?>[] variables;
     private final HashSet<ConditionNode> allConditions;
     private final ConditionNode[] majors;
@@ -17,12 +17,12 @@ public class InputParameters {
     private final HashMap<String, ArrayList<ConditionNode>> removedContradictingConditions;
     private final BranchPredicate branchPredicate;
 
-    public InputParameters(BinaryRelatedNode<?> root,
-                           VariableNode<?>[] variables,
-                           HashSet<ConditionNode> allConditions,
-                           ConditionNode[] majors,
-                           HashMap<String, ArrayList<ConditionNode>> removedEquivalentConditions,
-                           HashMap<String, ArrayList<ConditionNode>> removedContradictingConditions) {
+    public NumberValuesForInputs(BinaryRelatedNode<?> root,
+                                 VariableNode<?>[] variables,
+                                 HashSet<ConditionNode> allConditions,
+                                 ConditionNode[] majors,
+                                 HashMap<String, ArrayList<ConditionNode>> removedEquivalentConditions,
+                                 HashMap<String, ArrayList<ConditionNode>> removedContradictingConditions) {
         this.variables = variables;
         this.allConditions = allConditions;
         this.majors = majors;
@@ -40,16 +40,25 @@ public class InputParameters {
             Arrays.stream(variables).forEach(v -> v.setValueSet(false));
 
             List<ConditionWithExpectedValue> equalsConditions = conditionWithExpectedValues.stream()
-                    .filter(c -> (c.getRelation().equals(ComparisonRelation.EqualsEquals) && c.getExpectedValue()) ||
-                            (c.getRelation().equals(ComparisonRelation.NotEquals) && !c.getExpectedValue()))
-                    .collect(Collectors.toList());
+                    .filter(c -> (c.getRelation().equals(ComparisonRelation.EqualsEquals) && c.getExpectedValue() && !c.getCondition().isNegated()) ||
+                            (c.getRelation().equals(ComparisonRelation.NotEquals) && !c.getExpectedValue() && !c.getCondition().isNegated()) ||
+                            (c.getRelation().equals(ComparisonRelation.EqualsEquals) && !c.getExpectedValue() && c.getCondition().isNegated()) ||
+                            (c.getRelation().equals(ComparisonRelation.NotEquals) && c.getExpectedValue() && c.getCondition().isNegated())
+                    ).collect(Collectors.toList());
 
             for (ConditionWithExpectedValue equalsCondition : equalsConditions) {
                 Number number = getRandomValueForVariable(
                         equalsCondition.getInvolvedVariables()[0].getType(),
                         equalsCondition.getInvolvedVariables()[0].getMin(),
                         equalsCondition.getInvolvedVariables()[0].getMax());
-                Arrays.stream(equalsCondition.getInvolvedVariables()).filter(v -> !v.isValueSet()).forEach(c -> c.setValue(number));
+                Optional<VariableNode<?>> anySetValue = Arrays.stream(equalsCondition.getInvolvedVariables()).filter(VariableNode::isValueSet).findFirst();
+
+                if (anySetValue.isPresent()) {
+                    number = anySetValue.get().getValue();
+                }
+
+                Number finalNumber = number;
+                Arrays.stream(equalsCondition.getInvolvedVariables()).filter(v -> !v.isValueSet()).forEach(c -> c.setValue(finalNumber));
             }
 
             List<VariableNode<?>> notSetVariables = Arrays.stream(variables).filter(v -> !v.isValueSet()).collect(Collectors.toList());
@@ -58,7 +67,7 @@ public class InputParameters {
                 variable.setValue(number);
             }
             counter++;
-        } while (!checkIfValuesSatisfyCondition(row) && counter < 1000);
+        } while (!checkIfValuesSatisfyCondition(conditionWithExpectedValues, row.get(row.size() - 1)) && counter < 1000);
         System.out.println(counter);
         return counter < 1000;
     }
@@ -75,29 +84,25 @@ public class InputParameters {
                 conditionWithExpectedValues.add(new ConditionWithExpectedValue(node, !row.get(majorIndex)));
             }
         }
-        //todo add equivalent as well
+
+        for (Map.Entry<String, ArrayList<ConditionNode>> equivalentEntry : removedEquivalentConditions.entrySet()) {
+            ConditionNode major = Arrays.stream(majors).filter(m -> m.toString().equals(equivalentEntry.getKey())).findFirst().get();
+            int majorIndex = Arrays.asList(majors).indexOf(major);
+            for (ConditionNode node : equivalentEntry.getValue()) {
+                conditionWithExpectedValues.add(new ConditionWithExpectedValue(node, row.get(majorIndex)));
+            }
+        }
         return conditionWithExpectedValues;
     }
 
-    private boolean checkIfValuesSatisfyCondition(ArrayList<Boolean> row) {
-        for (int i = 0; i < majors.length; i++) {
-            if (row.get(i) != majors[i].getResult()) {
+    private boolean checkIfValuesSatisfyCondition(ArrayList<ConditionWithExpectedValue> conditionWithExpectedValues, boolean branchResult) {
+        for (ConditionWithExpectedValue conditionWithExpectedValue : conditionWithExpectedValues) {
+            if (conditionWithExpectedValue.getCondition().getResult() != conditionWithExpectedValue.getExpectedValue()) {
                 return false;
             }
         }
-        for (Map.Entry<String, ArrayList<ConditionNode>> contradictingEntry : removedContradictingConditions.entrySet()) {
-            ConditionNode major = Arrays.stream(majors).filter(m -> m.toString().equals(contradictingEntry.getKey())).findFirst().get();
-            int majorIndex = Arrays.asList(majors).indexOf(major);
-            for (ConditionNode node : contradictingEntry.getValue()) {
-                if (row.get(majorIndex) == node.getResult()) {
-                    return false;
-                }
-            }
-        }
 
-        //todo add equivalent as well
-
-        return branchPredicate.getResult() == row.get(row.size() - 1);
+        return branchPredicate.getResult() == branchResult;
     }
 
     private Number getRandomValueForVariable(Class<?> type, Number min, Number max) {

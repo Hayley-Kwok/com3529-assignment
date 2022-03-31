@@ -65,4 +65,8 @@ public abstract class BinaryRelatedNode<T> extends SyntaxNode {
         }
         return result;
     }
+
+    public boolean isNegated() {
+        return negated;
+    }
 }

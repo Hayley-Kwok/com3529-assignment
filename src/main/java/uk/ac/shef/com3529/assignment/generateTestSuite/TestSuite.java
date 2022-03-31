@@ -7,8 +7,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 
 //1 TestRequirement -> 1 Branch Predicate -> 1 TestCase
 public class TestSuite {
@@ -20,30 +20,24 @@ public class TestSuite {
     private final String className;
     private final String testFunctionCall;
 
-    private HashSet<String> importString = new HashSet<>();
-    private List<TestRequirements> requirements;
-    private ArrayList<String> testCases = new ArrayList<>();
+    private final HashSet<String> importString = new HashSet<>();
+    private TestRequirements requirements;
+    private final ArrayList<String> testCases = new ArrayList<>();
 
-    public TestSuite(String className, String importStatementForTestFunction, String testFunctionCall, List<TestRequirements> testRequirements) {
+    public TestSuite(String className, String importStatementForTestFunction, String testFunctionCall, TestRequirements testRequirements) {
         this.className = className + "Test";
         this.testFunctionCall = testFunctionCall;
 
         importString.add(importStatementForTestFunction);
         requirements = testRequirements;
 
-        generateTestCases();
+        generateParameterizedTestCase(requirements);
         writeToFile();
-    }
-
-    private void generateTestCases() {
-        for (TestRequirements requirement : requirements) {
-            generateParameterizedTestCase(requirement);
-        }
     }
 
     private void generateParameterizedTestCase(TestRequirements requirement) {
         ArrayList<CsvSourceInput> inputs = new ArrayList<>();
-        InputParameters parameters = new InputParameters(requirement.getRoot(),
+        NumberValuesForInputs parameters = new NumberValuesForInputs(requirement.getRoot(),
                 requirement.getVariables(),
                 requirement.getAllConditions(),
                 requirement.getMajors(),
@@ -62,7 +56,7 @@ public class TestSuite {
             inputs.add(new CsvSourceInput(requirement.getFullConditionTable().get(testIndex), testIndex, values));
         }
         ParameterizedTestCase testCase =
-                new ParameterizedTestCase(importString, requirement.getVariables(), "restrictedTest", inputs);
+                new ParameterizedTestCase(importString, requirement.getVariables(), "restrictedTest", inputs, testFunctionCall);
         testCases.add(testCase.getTestCaseString());
     }
 
@@ -74,11 +68,7 @@ public class TestSuite {
             sb.append(String.join("", importString));
             sb.append("\n\n");
             sb.append(String.format(ClassDefinition, className));
-            sb.append(
-                    "    private boolean test(" + TestGenerationHelper.generateParametersSignature(requirements.get(0).getVariables()) + ") {\n" +
-                            "        return " + requirements.get(0).getRoot().toString() + ";\n" +
-                            "    }\n\n"
-            );
+            sb.append("// Majors: " + Arrays.toString(requirements.getMajors()) + "\n");
             sb.append(String.join("\n", testCases));
             sb.append("}");
             writer.write(sb.toString());

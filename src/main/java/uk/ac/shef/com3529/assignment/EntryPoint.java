@@ -5,17 +5,33 @@ import uk.ac.shef.com3529.assignment.model.BinaryRelatedNode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class EntryPoint {
     public static void main(String[] args) {
-        TestRequirements requirements = generateTestRequirements(ParsedExamples.getTrianglePractical());
-        TestSuite testSuite = new TestSuite("Triangle",
+        TestRequirements isoscelesRequirements = generateTestRequirements(ParsedExamples.getIsoscelesPractical());
+        TestSuite isoscelesTestSuite = new TestSuite("IsoscelesTriangle",
                 "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Triangle;",
-                "Triangle.instrumentedClassify(%s,%s,%s, coveredBranches);",
-                Collections.singletonList(requirements));
+                "Triangle.isoscelesClassify(%s, coveredBranches);",
+                isoscelesRequirements);
 
+        TestRequirements scaleneRequirements = generateTestRequirements(ParsedExamples.getScaleneBranch());
+        TestSuite scaleneTestSuite = new TestSuite("ScaleneTriangle",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Triangle;",
+                "Triangle.scaleneClassify(%s, coveredBranches);",
+                scaleneRequirements);
+
+        TestRequirements equilateralRequirements = generateTestRequirements(ParsedExamples.getEquilateralBranch());
+        TestSuite equilateralTestSuite = new TestSuite("EquilateralTriangle",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Triangle;",
+                "Triangle.equilateralClassify(%s, coveredBranches);\n",
+                equilateralRequirements);
+
+        TestRequirements invalidRequirements = generateTestRequirements(ParsedExamples.getInvalidBranch());
+        TestSuite invalidTestSuite = new TestSuite("InvalidTriangle",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Triangle;",
+                "Triangle.invalidClassify(%s, coveredBranches);\n",
+                invalidRequirements);
     }
 
     private static TestRequirements generateTestRequirements(BinaryRelatedNode<?> root) {
