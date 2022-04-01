@@ -19,6 +19,7 @@ public class TestRequirements {
     private ArrayList<Integer> restrictedTestIndices;
     private ArrayList<ArrayList<Boolean>> correlatedConditionTable;
     private ArrayList<Integer> correlatedTestIndices;
+    private ArrayList<Integer> notCoveredMajor;
 
     //using string as the key for the ConditionNode here cause HashMap doesn't like mutating object as key
     private HashMap<String, ArrayList<ConditionNode>> removedEquivalentConditions = new HashMap<>();
@@ -47,6 +48,10 @@ public class TestRequirements {
 
     public ConditionNode[] getMajors() {
         return majors;
+    }
+
+    public ArrayList<Integer> getNotCoveredMajor() {
+        return notCoveredMajor;
     }
 
     public HashMap<String, ArrayList<ConditionNode>> getRemovedEquivalentConditions() {
@@ -86,13 +91,20 @@ public class TestRequirements {
         return restrictedConditionTable;
     }
 
-    //TODO think about majors that doesn't has any pair (infeasible major)
     public ArrayList<Integer> getRestrictedTestIndices() {
         if (restrictedTestIndices != null) {
             return restrictedTestIndices;
         }
 
         ArrayList<int[]>[] allRestrictedMCDCPairs = getPossibleRestrictedMCDCPairs();
+
+        notCoveredMajor = new ArrayList<>();
+        for (int i = 0; i < allRestrictedMCDCPairs.length; i++) {
+            if (allRestrictedMCDCPairs[i] == null) {
+                notCoveredMajor.add(i);
+                allRestrictedMCDCPairs[i] = new ArrayList<>();
+            }
+        }
 
         List<ArrayList<int[]>> restrictedMCDCCombinations = generatePermutations(allRestrictedMCDCPairs);
 
@@ -130,12 +142,17 @@ public class TestRequirements {
             return correlatedTestIndices;
         }
 
+        //check if restricted already satisfy correlated
+        if (notCoveredMajor.size() == 0) {
+            correlatedTestIndices = restrictedTestIndices;
+        }
+
         ArrayList<ArrayList<Integer>> newPairs = new ArrayList<>();
 
         Set<Integer> notUsedTestIndices = IntStream.range(0, fullConditionTable.size()).boxed().collect(Collectors.toSet());
         notUsedTestIndices.removeAll(new HashSet<>(restrictedTestIndices));
 
-        //check if existing restricted pairs also satisfy correlated or any existing restricted MCDC test has a flipped version in the fullConditionTable
+        //check if any existing restricted pairs also satisfy correlated or any existing restricted MCDC test has a flipped version in the fullConditionTable
         for (Integer i : restrictedTestIndices) {
             ArrayList<Boolean> flippedRow = getCorrelatedFlippedRow(fullConditionTable.get(i));
             for (Integer j : restrictedTestIndices) {
@@ -169,10 +186,6 @@ public class TestRequirements {
             }
         }
 
-        //TODO find the ones that require more than two test cases
-        // 1. check if the existing restricted satisfy correlated
-        // 2. find the complementing one if restricted doesn't satisfy
-        correlatedTestIndices = restrictedTestIndices;
         return correlatedTestIndices;
     }
 
@@ -202,6 +215,10 @@ public class TestRequirements {
             return;
         }
 
+        if (lists[depth].size() == 0) {
+            generatePermutationsHelper(lists, result, depth + 1, new ArrayList<>(current));
+        }
+
         for (int i = 0; i < lists[depth].size(); i++) {
             ArrayList<int[]> copy = new ArrayList<>(current);
             copy.add(lists[depth].get(i));
@@ -210,10 +227,12 @@ public class TestRequirements {
     }
 
     /**
-     * Generate all the possible pairs for restricted MCDC
+     * Generate all the possible test ID pairs for each major to satisfy restricted MCDC
      *
      * @return an array of arraylist of int array.
-     * The int array store the 2 indices of the test from the fullMultiConditionTable that satisfy restricted MCDC for that condition.
+     * The int array store the 2 indices of test from the fullMultiConditionTable that satisfy restricted MCDC for that condition (major).
+     * major 0 pairs   major1 pairs    major2 pairs
+     * Eg output: [ <[1,5],[3,7]>, <[1,3], [5,7]> , <[2,3],[4,5]> ]
      */
     private ArrayList<int[]>[] getPossibleRestrictedMCDCPairs() {
         ArrayList<int[]>[] allCandidates = new ArrayList[majors.length];
@@ -232,30 +251,6 @@ public class TestRequirements {
             }
         }
         return allCandidates;
-    }
-
-    /**
-     * Essentially a toString method for the object returned from getPossibleRestrictedMCDCPairs
-     *
-     * @return String version of getPossibleRestrictedMCDCPairs
-     */
-    private String getAllPossibleRestrictedMCDCStr() {
-        StringBuilder sb = new StringBuilder().append("[");
-        for (ArrayList<int[]> row : getPossibleRestrictedMCDCPairs()) {
-            sb.append("[");
-            if (row == null) {
-                sb.append("null");
-            } else {
-                for (int[] pair : row) {
-                    sb.append(Arrays.toString(pair)).append(", ");
-                }
-                sb.setLength(sb.length() - 2);
-            }
-            sb.append("], ");
-        }
-        sb.setLength(sb.length() - 2);
-        sb.append("]");
-        return sb.toString();
     }
 
     /**

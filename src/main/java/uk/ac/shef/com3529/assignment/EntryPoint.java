@@ -9,6 +9,31 @@ import java.util.stream.Collectors;
 
 public class EntryPoint {
     public static void main(String[] args) {
+        restrictedNotCoveredAllMajorsExample();
+
+        daysExample();
+    }
+
+    private static void restrictedNotCoveredAllMajorsExample() {
+        TestRequirements restrictedNotCoveredAllMajorsRequirements = generateTestRequirements(ParsedExamples.getRestrictedNotCoveringAllMajors());
+        TestSuite restrictedNotCoveredAllMajorsTestSuite = new TestSuite("RestrictedNotCoveringAllMajors",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.RandomExample;",
+                "RandomExample.RestrictedNotCoveringAllMajors(%s, coveredBranches);",
+                restrictedNotCoveredAllMajorsRequirements, false);
+        restrictedNotCoveredAllMajorsTestSuite.writeToFile();
+    }
+
+    private static void daysExample() {
+        TestRequirements daysRequirement = generateTestRequirements(ParsedExamples.getDaysBetweenTwoDates());
+        TestSuite dayBetweenTwoDatesTestSuite = new TestSuite("DayBetweenTwoDates",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Calendar;",
+                "Calendar.daysBetweenTwoDates(%s, coveredBranches);",
+                daysRequirement, false);
+        dayBetweenTwoDatesTestSuite.writeToFile();
+    }
+
+
+    private static void TriangleExamples() {
         TestRequirements isoscelesRequirements = generateTestRequirements(ParsedExamples.getIsoscelesPractical());
         TestSuite isoscelesTestSuite = new TestSuite("IsoscelesTriangle",
                 "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Triangle;",
@@ -73,6 +98,7 @@ public class EntryPoint {
         System.out.println("Full Condition Table: \n\t" + prettyPrintConditionTable(requirements.getFullConditionTable()));
         System.out.println("Restricted MCDC Test Indices: " + requirements.getRestrictedTestIndices());
         System.out.println("Restricted MCDC Table: \n\t" + prettyPrintConditionTable(requirements.getRestrictedMCDCConditionTable()));
+        System.out.println("Majors that Restricted MCDC didn't manage to cover:" + requirements.getNotCoveredMajor());
         System.out.println("Correlated MCDC Test Indices: " + requirements.getCorrelatedTestIndices());
         System.out.println("Correlated MCDC Table: \n\t" + prettyPrintConditionTable(requirements.getCorrelatedMCDCConditionTable()));
         System.out.println("--------------------------------------------------------------------------------------------------------------------------------");

@@ -18,6 +18,7 @@ public class TestSuite {
     private static final String OutputDirectory = "src/test/java/uk/ac/shef/com3529/assignment/generatedTestCases";
     private static final String FilePath = "/%s.java";
     private static final String ClassDefinition = "public class %s { \n";
+    private static String generatedTestMethodName = "MCDCTest";
 
     private final String className;
     private final String testFunctionCall;
@@ -41,14 +42,14 @@ public class TestSuite {
 
     private void generateCoveredBranchTestCase() {
         ArrayList<CsvSourceInput> inputs = generateInputs();
-        TestCaseWithCoveredBranch testCase = new TestCaseWithCoveredBranch(importString, requirements.getVariables(), "restrictedTest", inputs, testFunctionCall);
+        TestCaseWithCoveredBranch testCase = new TestCaseWithCoveredBranch(importString, requirements.getVariables(), generatedTestMethodName, inputs, testFunctionCall);
         testCases.add(testCase.getTestCaseString());
     }
 
     private void generateParameterizedTestCase() {
         ArrayList<CsvSourceInput> inputs = generateInputs();
         ParameterizedTestCase testCase =
-                new ParameterizedTestCase(importString, requirements.getVariables(), "restrictedTest", inputs, testFunctionCall);
+                new ParameterizedTestCase(importString, requirements.getVariables(), generatedTestMethodName, inputs, testFunctionCall);
         testCases.add(testCase.getTestCaseString());
     }
 
@@ -62,7 +63,10 @@ public class TestSuite {
                 requirements.getRemovedEquivalentConditions(),
                 requirements.getRemovedContradictingConditions());
 
-        for (int testIndex : requirements.getRestrictedTestIndices()) {
+        HashSet<Integer> requiredTestIndices = new HashSet<>();
+        requiredTestIndices.addAll(requirements.getCorrelatedTestIndices());
+        requiredTestIndices.addAll(requirements.getRestrictedTestIndices());
+        for (int testIndex : requiredTestIndices) {
             boolean feasible = parameters.findValueForVariablesForRow(requirements.getFullConditionTable().get(testIndex));
 
             ArrayList<Number> values = new ArrayList<>();
@@ -84,7 +88,9 @@ public class TestSuite {
             sb.append(String.join("\n", importString));
             sb.append("\n\n");
             sb.append(String.format(ClassDefinition, className));
-            sb.append("    // Majors: " + Arrays.toString(requirements.getMajors()) + "\n\n");
+            sb.append("    // Majors: " + Arrays.toString(requirements.getMajors()) + "\n");
+            sb.append("    // Restricted Test Indices: " + requirements.getRestrictedTestIndices() + "\n");
+            sb.append("    // Correlated Test Indices: " + requirements.getCorrelatedTestIndices() + "\n\n");
             sb.append(String.join("\n", testCases));
             sb.append("}");
             writer.write(sb.toString());
