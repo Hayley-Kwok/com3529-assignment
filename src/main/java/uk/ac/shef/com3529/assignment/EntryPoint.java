@@ -13,25 +13,53 @@ public class EntryPoint {
         TestSuite isoscelesTestSuite = new TestSuite("IsoscelesTriangle",
                 "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Triangle;",
                 "Triangle.isoscelesClassify(%s, coveredBranches);",
-                isoscelesRequirements);
+                isoscelesRequirements, false);
+        isoscelesTestSuite.writeToFile();
+
+        TestSuite isoscelesTestSuiteWithCoveredBranch = new TestSuite("IsoscelesTriangleWithCoveredBranch",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Triangle;",
+                "Triangle.isoscelesClassify(%s, coveredBranches);",
+                isoscelesRequirements, true);
+        isoscelesTestSuiteWithCoveredBranch.writeToFile();
 
         TestRequirements scaleneRequirements = generateTestRequirements(ParsedExamples.getScaleneBranch());
         TestSuite scaleneTestSuite = new TestSuite("ScaleneTriangle",
                 "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Triangle;",
                 "Triangle.scaleneClassify(%s, coveredBranches);",
-                scaleneRequirements);
+                scaleneRequirements, false);
+        scaleneTestSuite.writeToFile();
+
+        TestSuite scaleneTestSuiteWithCoveredBranch = new TestSuite("ScaleneTriangleWithCoveredBranch",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Triangle;",
+                "Triangle.scaleneClassify(%s, coveredBranches);",
+                scaleneRequirements, true);
+        scaleneTestSuiteWithCoveredBranch.writeToFile();
 
         TestRequirements equilateralRequirements = generateTestRequirements(ParsedExamples.getEquilateralBranch());
         TestSuite equilateralTestSuite = new TestSuite("EquilateralTriangle",
                 "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Triangle;",
                 "Triangle.equilateralClassify(%s, coveredBranches);\n",
-                equilateralRequirements);
+                equilateralRequirements, false);
+        equilateralTestSuite.writeToFile();
+
+        TestSuite equilateralTestSuiteWithBranch = new TestSuite("EquilateralTriangleWithCoveredBranch",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Triangle;",
+                "Triangle.equilateralClassify(%s, coveredBranches);\n",
+                equilateralRequirements, true);
+        equilateralTestSuiteWithBranch.writeToFile();
 
         TestRequirements invalidRequirements = generateTestRequirements(ParsedExamples.getInvalidBranch());
         TestSuite invalidTestSuite = new TestSuite("InvalidTriangle",
                 "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Triangle;",
                 "Triangle.invalidClassify(%s, coveredBranches);\n",
-                invalidRequirements);
+                invalidRequirements, false);
+        invalidTestSuite.writeToFile();
+
+        TestSuite invalidTestSuiteWithBranch = new TestSuite("InvalidTriangleWithCoveredBranch",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Triangle;",
+                "Triangle.invalidClassify(%s, coveredBranches);\n",
+                invalidRequirements, true);
+        invalidTestSuiteWithBranch.writeToFile();
     }
 
     private static TestRequirements generateTestRequirements(BinaryRelatedNode<?> root) {

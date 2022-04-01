@@ -1,30 +1,20 @@
-package uk.ac.shef.com3529.assignment.generateTestSuite;
+package uk.ac.shef.com3529.assignment.generateTestSuite.TestCases;
 
+import uk.ac.shef.com3529.assignment.generateTestSuite.CsvSourceInput;
+import uk.ac.shef.com3529.assignment.generateTestSuite.TestGenerationHelper;
 import uk.ac.shef.com3529.assignment.model.VariableNode;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class ParameterizedTestCase {
-
-    private final HashSet<String> importString;
-    private String testCaseString;
-    private final String methodName;
-    private final VariableNode<?>[] variables;
-    private final ArrayList<CsvSourceInput> inputValues;
-    private final String testFunctionCall;
+public class ParameterizedTestCase extends TestCaseBase {
 
     public ParameterizedTestCase(HashSet<String> importString, VariableNode<?>[] variables, String methodName,
                                  ArrayList<CsvSourceInput> inputValues, String testFunctionCall) {
-        this.importString = importString;
-        this.variables = variables;
-        this.methodName = methodName;
-        this.inputValues = inputValues;
-        this.testFunctionCall = testFunctionCall;
-
-        addImportString();
+        super(importString, variables, methodName, inputValues, testFunctionCall);
     }
 
+    @Override
     public String getTestCaseString() {
         if (testCaseString != null) {
             return testCaseString;
@@ -35,16 +25,22 @@ public class ParameterizedTestCase {
                         "    @CsvSource({" +
                         generateCsvSourceValues() +
                         "              })\n" +
-                        "    public void " + methodName + "(" + TestGenerationHelper.generateParametersSignature(variables) + ", boolean expected) {\n" +
+                        "    public void " + methodName + "(" + TestGenerationHelper.generateParametersSignature(variables) + ", boolean expectedBranchResult) {\n" +
                         "        HashSet<Integer> coveredBranches = new HashSet<>();\n" +
-                        "        boolean actualBranchResult =" + String.format(testFunctionCall, TestGenerationHelper.generateOnlyNameSignature(variables)) +
+                        "        boolean actualBranchResult = " + String.format(testFunctionCall, TestGenerationHelper.generateOnlyNameSignature(variables)) +
                         "\n" +
                         "        System.out.println(coveredBranches);\n" +
-//                        "        HashSet<Integer> expectedCoveredBranches = new HashSet<>(Arrays.asList(2,3,5,7));\n" +
-//                        "        assertTrue(coveredBranches.containsAll(expectedCoveredBranches));\n" +
-                        "        assertEquals(expected, actualBranchResult);\n" +
+                        "        assertEquals(expectedBranchResult, actualBranchResult);\n" +
                         "    }\n";
         return testCaseString;
+    }
+
+    @Override
+    protected void addImportString() {
+        importString.add("import org.junit.jupiter.params.ParameterizedTest;");
+        importString.add("import org.junit.jupiter.params.provider.CsvSource;");
+        importString.add("import static org.junit.jupiter.api.Assertions.assertEquals;");
+        importString.add("import java.util.HashSet;");
     }
 
     private String generateCsvSourceValues() {
@@ -78,14 +74,6 @@ public class ParameterizedTestCase {
             sb.append("\n");
         }
         return sb.toString();
-    }
-
-    private void addImportString() {
-        importString.add("import org.junit.jupiter.params.ParameterizedTest;\n");
-        importString.add("import org.junit.jupiter.params.provider.CsvSource;\n");
-        importString.add("import static org.junit.jupiter.api.Assertions.assertEquals;\n");
-        importString.add("import java.util.Arrays;\n");
-        importString.add("import java.util.HashSet;\n");
     }
 
 }
