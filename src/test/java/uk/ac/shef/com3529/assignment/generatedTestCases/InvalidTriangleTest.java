@@ -8,16 +8,16 @@ import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class InvalidTriangleTest {
+public class InvalidTriangleTest { 
     // Majors: [(side1 + side2 <= side3)]
     // Restricted Test Indices: [0, 1]
     // Correlated Test Indices: [0, 1]
 
     @ParameterizedTest
     @CsvSource({
-            " 9, 2, 5, false",  //Test ID 0: [false, false]
-            " 1, 4, 6, true",  //Test ID 1: [true, true]
-    })
+                " 5, 4, 3, false",  //Test ID 0: [false, false]
+                " 1, 1, 2, true",  //Test ID 1: [true, true]
+              })
     public void MCDCTest(int side1, int side2, int side3, boolean expectedBranchResult) {
         HashSet<Integer> coveredBranches = new HashSet<>();
         boolean actualBranchResult = Triangle.invalidClassify(side1, side2, side3, coveredBranches);

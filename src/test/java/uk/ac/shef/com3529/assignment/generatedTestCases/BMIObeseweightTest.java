@@ -8,16 +8,16 @@ import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BMIObeseweightTest {
+public class BMIObeseweightTest { 
     // Majors: [(bmi >= 30.0)]
     // Restricted Test Indices: [0, 1]
     // Correlated Test Indices: [0, 1]
 
     @ParameterizedTest
     @CsvSource({
-            " 27.785513238361272, false",  //Test ID 0: [false, false]
-            " 49.01798422264678, true",  //Test ID 1: [true, true]
-    })
+                " 18.397845908422262, false",  //Test ID 0: [false, false]
+                " 39.11345701563589, true",  //Test ID 1: [true, true]
+              })
     public void MCDCTest(double bmi, boolean expectedBranchResult) {
         HashSet<Integer> coveredBranches = new HashSet<>();
         boolean actualBranchResult = BMI.obese(bmi, coveredBranches);

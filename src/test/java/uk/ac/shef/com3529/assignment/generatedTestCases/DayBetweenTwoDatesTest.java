@@ -8,20 +8,20 @@ import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DayBetweenTwoDatesTest {
-    // Majors: [(day2 < day1), (year2 < year1), (year2 == year1), (month2 == month1), (month2 < month1)]
-    // Restricted Test Indices: [3, 20, 6, 22, 7, 11]
-    // Correlated Test Indices: [20, 11]
+public class DayBetweenTwoDatesTest { 
+    // Majors: [(year2 < year1), (year2 == year1), (day2 < day1), (month2 < month1), (month2 == month1)]
+    // Restricted Test Indices: [3, 19, 9, 11, 12, 13]
+    // Correlated Test Indices: [19, 12]
 
     @ParameterizedTest
     @CsvSource({
-            // The program cannot find the input that satisfy this test requirement. This could mean that this requirement is infeasible.Test ID 3: [false, false, false, true, true, false]
-            " 29, 12, 1, 2, 82, 82, false",  //Test ID 20: [true, false, true, false, false, false]
-            " 5, 29, 12, 12, 1205, 1205, false",  //Test ID 6: [false, false, true, true, false, false]
-            " 17, 11, 5, 5, 911, 911, true",  //Test ID 22: [true, false, true, true, false, true]
-            // The program cannot find the input that satisfy this test requirement. This could mean that this requirement is infeasible.Test ID 7: [false, false, true, true, true, true]
-            // The program cannot find the input that satisfy this test requirement. This could mean that this requirement is infeasible.Test ID 11: [false, true, false, true, true, true]
-    })
+                // The program cannot find the input that satisfy this test requirement. This could mean that this requirement is infeasible.Test ID 19: [true, false, false, true, true, true]
+                // The program cannot find the input that satisfy this test requirement. This could mean that this requirement is infeasible.Test ID 3: [false, false, false, true, true, false]
+                " 4, 15, 11, 11, 718, 718, false",  //Test ID 9: [false, true, false, false, true, false]
+                // The program cannot find the input that satisfy this test requirement. This could mean that this requirement is infeasible.Test ID 11: [false, true, false, true, true, true]
+                " 24, 6, 6, 12, 1937, 1937, false",  //Test ID 12: [false, true, true, false, false, false]
+                " 12, 3, 11, 11, 2586, 2586, true",  //Test ID 13: [false, true, true, false, true, true]
+              })
     public void MCDCTest(int day1, int day2, int month1, int month2, int year1, int year2, boolean expectedBranchResult) {
         HashSet<Integer> coveredBranches = new HashSet<>();
         boolean actualBranchResult = Calendar.daysBetweenTwoDates(day1, day2, month1, month2, year1, year2, coveredBranches);

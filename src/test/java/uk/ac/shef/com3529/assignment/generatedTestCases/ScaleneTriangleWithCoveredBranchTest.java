@@ -13,8 +13,8 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ScaleneTriangleWithCoveredBranchTest {
-    // Majors: [!(side1 == side2), !(side2 == side3), (side1 + side2 > side3), !(side1 == side3)]
+public class ScaleneTriangleWithCoveredBranchTest { 
+    // Majors: [!(side2 == side3), !(side1 == side2), !(side1 == side3), (side1 + side2 > side3)]
     // Restricted Test Indices: [7, 11, 13, 14, 15]
     // Correlated Test Indices: [15, 0]
 
@@ -24,11 +24,11 @@ public class ScaleneTriangleWithCoveredBranchTest {
             return Stream.of(
                     //TODO add values to the set for expected covered branch
 // The program cannot find the input that satisfy this test requirement. This could mean that this requirement is infeasible.Test ID 0: [false, false, false, false, false]
-                    Arguments.of(6, 6, 4, false, new HashSet<Integer>(Arrays.asList(1, 7))), //Test ID 7: [false, true, true, true, false]
-                    Arguments.of(9, 8, 8, false, new HashSet<Integer>(Arrays.asList(1, 2, 6))), //Test ID 11: [true, false, true, true, false]
-                    Arguments.of(3, 1, 9, false, new HashSet<Integer>(Arrays.asList(8))), //Test ID 13: [true, true, false, true, false]
-                    Arguments.of(1, 7, 1, false, new HashSet<Integer>(Arrays.asList(1, 2, 3, 5))), //Test ID 14: [true, true, true, false, false]
-                    Arguments.of(8, 5, 7, true, new HashSet<Integer>(Arrays.asList(1, 2, 3, 4))) //Test ID 15: [true, true, true, true, true]
+                    Arguments.of(5, 4, 4, false, new HashSet<Integer>(Arrays.asList(1,2,6))), //Test ID 7: [false, true, true, true, false]
+                    Arguments.of(5, 5, 4, false, new HashSet<Integer>(Arrays.asList(1,7))), //Test ID 11: [true, false, true, true, false]
+                    Arguments.of(3, 9, 3, false, new HashSet<Integer>(Arrays.asList(1,2,3,5))), //Test ID 13: [true, true, false, true, false]
+                    Arguments.of(4, 2, 6, false, new HashSet<Integer>(Arrays.asList(8))), //Test ID 14: [true, true, true, false, false]
+                    Arguments.of(4, 1, 2, true, new HashSet<Integer>(Arrays.asList(1,2,3,4))) //Test ID 15: [true, true, true, true, true]
             );
         }
     }

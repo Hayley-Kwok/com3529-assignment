@@ -1,14 +1,16 @@
 package uk.ac.shef.com3529.assignment.generatedTestCases;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
-import java.util.Arrays;
-import java.util.stream.Stream;
-import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.RandomExample;
-import org.junit.jupiter.params.provider.Arguments;
-import java.util.HashSet;
-import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.RandomExample;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.stream.Stream;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RestrictedNotCoveringAllMajorsWithCoveredBranchTest { 
@@ -21,9 +23,9 @@ public class RestrictedNotCoveringAllMajorsWithCoveredBranchTest {
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
                     //TODO add values to the set for expected covered branch
-                    Arguments.of(18.782112f, 0.81246376f, 14.497818f, false, new HashSet<Integer>(Arrays.asList(3,4,5))), //Test ID 0: [false, false, false]
-                    Arguments.of(19.003794f, 18.150127f, 18.150127f, true, new HashSet<Integer>(Arrays.asList(2,4,5))), //Test ID 1: [false, true, true]
-                    Arguments.of(15.312186f, 15.312186f, 15.312186f, true, new HashSet<Integer>(Arrays.asList(1,2,6))) //Test ID 3: [true, true, true]
+                    Arguments.of(6.319523f, 15.905655f, 3.3873367f, false, new HashSet<Integer>(Arrays.asList(3,4,5))), //Test ID 0: [false, false, false]
+                    Arguments.of(5.7938313f, 7.510496f, 7.510496f, true, new HashSet<Integer>(Arrays.asList(2,4,5))), //Test ID 1: [false, true, true]
+                    Arguments.of(13.827506f, 13.827506f, 13.827506f, true, new HashSet<Integer>(Arrays.asList(1,2,6))) //Test ID 3: [true, true, true]
             );
         }
     }

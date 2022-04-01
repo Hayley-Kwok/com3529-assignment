@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BMIUnderWeightWithCoveredBranchTest {
+public class BMIUnderWeightWithCoveredBranchTest { 
     // Majors: [(bmi < 18.5)]
     // Restricted Test Indices: [0, 1]
     // Correlated Test Indices: [0, 1]
@@ -23,8 +23,8 @@ public class BMIUnderWeightWithCoveredBranchTest {
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
                     //TODO add values to the set for expected covered branch
-                    Arguments.of(29.88630911979195, false, new HashSet<Integer>(Arrays.asList(2))), //Test ID 0: [false, false]
-                    Arguments.of(9.434706185279303, true, new HashSet<Integer>(Arrays.asList(1))) //Test ID 1: [true, true]
+                    Arguments.of(19.613755600788462, false, new HashSet<Integer>(Arrays.asList(2))), //Test ID 0: [false, false]
+                    Arguments.of(14.452153636172792, true, new HashSet<Integer>(Arrays.asList(1))) //Test ID 1: [true, true]
             );
         }
     }

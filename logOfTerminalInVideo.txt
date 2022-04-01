@@ -1,0 +1,258 @@
+"C:\Program Files\AdoptOpenJDK\jdk-11.0.8.10-hotspot\bin\java.exe" "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2020.3.2\lib\idea_rt.jar=12250:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2020.3.2\bin" -Dfile.encoding=UTF-8 -classpath C:\Users\wingk\hayley\uni\cs_year3_sem2\3529_testing\assignement\target\classes uk.ac.shef.com3529.assignment.EntryPoint
+--------------------------------------------------------------------------------------------------------------------------------
+Branch Predicate under consideration: (((a == b) && (b == c)) || ((a != b) && (b == c)))
+All Conditions: [(a == b), (a != b), (b == c)]
+Inputs: [a, b, c]
+Majors: [(a == b), (b == c)]
+Full Condition Table:
+	[false, false, false]
+	[false, true, true]
+	[true, false, false]
+	[true, true, true]
+Restricted MCDC Test Indices: [0, 1]
+Restricted MCDC Table:
+	[false, false, false]
+	[false, true, true]
+Majors that Restricted MCDC didn't manage to cover:[0]
+Correlated MCDC Test Indices: [0, 3]
+Correlated MCDC Table:
+	[false, false, false]
+	[true, true, true]
+--------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
+Branch Predicate under consideration: (bmi < 18.5)
+All Conditions: [(bmi < 18.5)]
+Inputs: [bmi]
+Majors: [(bmi < 18.5)]
+Full Condition Table:
+	[false, false]
+	[true, true]
+Restricted MCDC Test Indices: [0, 1]
+Restricted MCDC Table:
+	[false, false]
+	[true, true]
+Majors that Restricted MCDC didn't manage to cover:[]
+Correlated MCDC Test Indices: [0, 1]
+Correlated MCDC Table:
+	[false, false]
+	[true, true]
+--------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
+Branch Predicate under consideration: ((bmi >= 18.5) && (bmi < 25.0))
+All Conditions: [(bmi < 25.0), (bmi >= 18.5)]
+Inputs: [bmi]
+Majors: [(bmi < 25.0), (bmi >= 18.5)]
+Full Condition Table:
+	[false, false, false]
+	[false, true, false]
+	[true, false, false]
+	[true, true, true]
+Restricted MCDC Test Indices: [1, 2, 3]
+Restricted MCDC Table:
+	[false, true, false]
+	[true, false, false]
+	[true, true, true]
+Majors that Restricted MCDC didn't manage to cover:[]
+Correlated MCDC Test Indices: [3, 0]
+Correlated MCDC Table:
+	[true, true, true]
+	[false, false, false]
+--------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
+Branch Predicate under consideration: ((bmi >= 25.0) && (bmi < 30.0))
+All Conditions: [(bmi < 30.0), (bmi >= 25.0)]
+Inputs: [bmi]
+Majors: [(bmi < 30.0), (bmi >= 25.0)]
+Full Condition Table:
+	[false, false, false]
+	[false, true, false]
+	[true, false, false]
+	[true, true, true]
+Restricted MCDC Test Indices: [1, 2, 3]
+Restricted MCDC Table:
+	[false, true, false]
+	[true, false, false]
+	[true, true, true]
+Majors that Restricted MCDC didn't manage to cover:[]
+Correlated MCDC Test Indices: [3, 0]
+Correlated MCDC Table:
+	[true, true, true]
+	[false, false, false]
+--------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
+Branch Predicate under consideration: (bmi >= 30.0)
+All Conditions: [(bmi >= 30.0)]
+Inputs: [bmi]
+Majors: [(bmi >= 30.0)]
+Full Condition Table:
+	[false, false]
+	[true, true]
+Restricted MCDC Test Indices: [0, 1]
+Restricted MCDC Table:
+	[false, false]
+	[true, true]
+Majors that Restricted MCDC didn't manage to cover:[]
+Correlated MCDC Test Indices: [0, 1]
+Correlated MCDC Table:
+	[false, false]
+	[true, true]
+--------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
+Branch Predicate under consideration: ((year2 < year1) || (((year2 == year1) && (month2 < month1)) || ((year2 == year1) && ((month2 == month1) && (day2 < day1)))))
+All Conditions: [(year2 < year1), (year2 == year1), (day2 < day1), (month2 < month1), (month2 == month1)]
+Inputs: [day1, day2, month1, month2, year1, year2]
+Majors: [(year2 < year1), (year2 == year1), (day2 < day1), (month2 < month1), (month2 == month1)]
+Full Condition Table:
+	[false, false, false, false, false, false]
+	[false, false, false, false, true, false]
+	[false, false, false, true, false, false]
+	[false, false, false, true, true, false]
+	[false, false, true, false, false, false]
+	[false, false, true, false, true, false]
+	[false, false, true, true, false, false]
+	[false, false, true, true, true, false]
+	[false, true, false, false, false, false]
+	[false, true, false, false, true, false]
+	[false, true, false, true, false, true]
+	[false, true, false, true, true, true]
+	[false, true, true, false, false, false]
+	[false, true, true, false, true, true]
+	[false, true, true, true, false, true]
+	[false, true, true, true, true, true]
+	[true, false, false, false, false, true]
+	[true, false, false, false, true, true]
+	[true, false, false, true, false, true]
+	[true, false, false, true, true, true]
+	[true, false, true, false, false, true]
+	[true, false, true, false, true, true]
+	[true, false, true, true, false, true]
+	[true, false, true, true, true, true]
+	[true, true, false, false, false, true]
+	[true, true, false, false, true, true]
+	[true, true, false, true, false, true]
+	[true, true, false, true, true, true]
+	[true, true, true, false, false, true]
+	[true, true, true, false, true, true]
+	[true, true, true, true, false, true]
+	[true, true, true, true, true, true]
+Restricted MCDC Test Indices: [3, 19, 9, 11, 12, 13]
+Restricted MCDC Table:
+	[false, false, false, true, true, false]
+	[true, false, false, true, true, true]
+	[false, true, false, false, true, false]
+	[false, true, false, true, true, true]
+	[false, true, true, false, false, false]
+	[false, true, true, false, true, true]
+Majors that Restricted MCDC didn't manage to cover:[]
+Correlated MCDC Test Indices: [19, 12]
+Correlated MCDC Table:
+	[true, false, false, true, true, true]
+	[false, true, true, false, false, false]
+--------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
+Branch Predicate under consideration: (((side1 + side2 > side3) && ((side1 == side2) || (side2 == side3))) && ((side1 != side2) || (side2 != side3)))
+All Conditions: [(side1 != side2), (side1 == side2), (side2 == side3), (side2 != side3), (side1 + side2 > side3)]
+Inputs: [side1, side2, side3]
+Majors: [(side1 == side2), (side2 == side3), (side1 + side2 > side3)]
+Full Condition Table:
+	[false, false, false, false]
+	[false, false, true, false]
+	[false, true, false, false]
+	[false, true, true, true]
+	[true, false, false, false]
+	[true, false, true, true]
+	[true, true, false, false]
+	[true, true, true, false]
+Restricted MCDC Test Indices: [1, 2, 3, 5]
+Restricted MCDC Table:
+	[false, false, true, false]
+	[false, true, false, false]
+	[false, true, true, true]
+	[true, false, true, true]
+Majors that Restricted MCDC didn't manage to cover:[]
+Correlated MCDC Test Indices: [2, 5]
+Correlated MCDC Table:
+	[false, true, false, false]
+	[true, false, true, true]
+--------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
+Branch Predicate under consideration: (((side1 + side2 > side3) && !(side1 == side2)) && (!(side2 == side3) && !(side1 == side3)))
+All Conditions: [!(side2 == side3), !(side1 == side2), !(side1 == side3), (side1 + side2 > side3)]
+Inputs: [side1, side2, side3]
+Majors: [!(side2 == side3), !(side1 == side2), !(side1 == side3), (side1 + side2 > side3)]
+Full Condition Table:
+	[false, false, false, false, false]
+	[false, false, false, true, false]
+	[false, false, true, false, false]
+	[false, false, true, true, false]
+	[false, true, false, false, false]
+	[false, true, false, true, false]
+	[false, true, true, false, false]
+	[false, true, true, true, false]
+	[true, false, false, false, false]
+	[true, false, false, true, false]
+	[true, false, true, false, false]
+	[true, false, true, true, false]
+	[true, true, false, false, false]
+	[true, true, false, true, false]
+	[true, true, true, false, false]
+	[true, true, true, true, true]
+Restricted MCDC Test Indices: [7, 11, 13, 14, 15]
+Restricted MCDC Table:
+	[false, true, true, true, false]
+	[true, false, true, true, false]
+	[true, true, false, true, false]
+	[true, true, true, false, false]
+	[true, true, true, true, true]
+Majors that Restricted MCDC didn't manage to cover:[]
+Correlated MCDC Test Indices: [15, 0]
+Correlated MCDC Table:
+	[true, true, true, true, true]
+	[false, false, false, false, false]
+--------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
+Branch Predicate under consideration: (((side1 + side2 > side3) && (side1 == side2)) && (side2 == side3))
+All Conditions: [(side1 == side2), (side2 == side3), (side1 + side2 > side3)]
+Inputs: [side1, side2, side3]
+Majors: [(side1 == side2), (side2 == side3), (side1 + side2 > side3)]
+Full Condition Table:
+	[false, false, false, false]
+	[false, false, true, false]
+	[false, true, false, false]
+	[false, true, true, false]
+	[true, false, false, false]
+	[true, false, true, false]
+	[true, true, false, false]
+	[true, true, true, true]
+Restricted MCDC Test Indices: [3, 5, 6, 7]
+Restricted MCDC Table:
+	[false, true, true, false]
+	[true, false, true, false]
+	[true, true, false, false]
+	[true, true, true, true]
+Majors that Restricted MCDC didn't manage to cover:[]
+Correlated MCDC Test Indices: [7, 0]
+Correlated MCDC Table:
+	[true, true, true, true]
+	[false, false, false, false]
+--------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
+Branch Predicate under consideration: (side1 + side2 <= side3)
+All Conditions: [(side1 + side2 <= side3)]
+Inputs: [side1, side2, side3]
+Majors: [(side1 + side2 <= side3)]
+Full Condition Table:
+	[false, false]
+	[true, true]
+Restricted MCDC Test Indices: [0, 1]
+Restricted MCDC Table:
+	[false, false]
+	[true, true]
+Majors that Restricted MCDC didn't manage to cover:[]
+Correlated MCDC Test Indices: [0, 1]
+Correlated MCDC Table:
+	[false, false]
+	[true, true]
+--------------------------------------------------------------------------------------------------------------------------------
+
+Process finished with exit code 0

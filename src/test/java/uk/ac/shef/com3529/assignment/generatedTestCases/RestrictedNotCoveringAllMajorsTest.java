@@ -8,17 +8,17 @@ import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class RestrictedNotCoveringAllMajorsTest {
+public class RestrictedNotCoveringAllMajorsTest { 
     // Majors: [(a == b), (b == c)]
     // Restricted Test Indices: [0, 1]
     // Correlated Test Indices: [0, 3]
 
     @ParameterizedTest
     @CsvSource({
-            " 18.92371, 14.1058235, 11.340123, false",  //Test ID 0: [false, false, false]
-            " 6.536007, 14.582566, 14.582566, true",  //Test ID 1: [false, true, true]
-            " 15.36295, 15.36295, 15.36295, true",  //Test ID 3: [true, true, true]
-    })
+                " 11.710982, 9.840341, 11.281454, false",  //Test ID 0: [false, false, false]
+                " 5.9609356, 3.8065398, 3.8065398, true",  //Test ID 1: [false, true, true]
+                " 4.357609, 4.357609, 4.357609, true",  //Test ID 3: [true, true, true]
+              })
     public void MCDCTest(float a, float b, float c, boolean expectedBranchResult) {
         HashSet<Integer> coveredBranches = new HashSet<>();
         boolean actualBranchResult = RandomExample.RestrictedNotCoveringAllMajors(a, b, c, coveredBranches);

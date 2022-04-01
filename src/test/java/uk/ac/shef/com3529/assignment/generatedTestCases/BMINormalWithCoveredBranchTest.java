@@ -13,8 +13,8 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BMINormalWithCoveredBranchTest {
-    // Majors: [(bmi >= 18.5), (bmi < 25.0)]
+public class BMINormalWithCoveredBranchTest { 
+    // Majors: [(bmi < 25.0), (bmi >= 18.5)]
     // Restricted Test Indices: [1, 2, 3]
     // Correlated Test Indices: [3, 0]
 
@@ -24,9 +24,9 @@ public class BMINormalWithCoveredBranchTest {
             return Stream.of(
                     //TODO add values to the set for expected covered branch
 // The program cannot find the input that satisfy this test requirement. This could mean that this requirement is infeasible.Test ID 0: [false, false, false]
-                    Arguments.of(17.68931904740629, false, new HashSet<Integer>(Arrays.asList(4))), //Test ID 1: [false, true, false]
-                    Arguments.of(28.727178014445194, false, new HashSet<Integer>(Arrays.asList(1, 3))), //Test ID 2: [true, false, false]
-                    Arguments.of(24.18642822420552, true, new HashSet<Integer>(Arrays.asList(1, 2))) //Test ID 3: [true, true, true]
+                    Arguments.of(25.818086077207525, false, new HashSet<Integer>(Arrays.asList(1,3))), //Test ID 1: [false, true, false]
+                    Arguments.of(16.06507622786591, false, new HashSet<Integer>(Arrays.asList(4))), //Test ID 2: [true, false, false]
+                    Arguments.of(20.044616329770136, true, new HashSet<Integer>(Arrays.asList(1,2))) //Test ID 3: [true, true, true]
             );
         }
     }

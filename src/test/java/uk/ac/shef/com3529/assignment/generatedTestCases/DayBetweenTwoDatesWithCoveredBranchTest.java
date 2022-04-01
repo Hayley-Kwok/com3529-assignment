@@ -13,22 +13,22 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DayBetweenTwoDatesWithCoveredBranchTest {
-    // Majors: [(day2 < day1), (year2 < year1), (year2 == year1), (month2 == month1), (month2 < month1)]
-    // Restricted Test Indices: [3, 20, 6, 22, 7, 11]
-    // Correlated Test Indices: [20, 11]
+public class DayBetweenTwoDatesWithCoveredBranchTest { 
+    // Majors: [(year2 < year1), (year2 == year1), (day2 < day1), (month2 < month1), (month2 == month1)]
+    // Restricted Test Indices: [3, 19, 9, 11, 12, 13]
+    // Correlated Test Indices: [19, 12]
 
     static class TestArgumentsProvider implements ArgumentsProvider {
         @Override
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
                     //TODO add values to the set for expected covered branch
+// The program cannot find the input that satisfy this test requirement. This could mean that this requirement is infeasible.Test ID 19: [true, false, false, true, true, true]
 // The program cannot find the input that satisfy this test requirement. This could mean that this requirement is infeasible.Test ID 3: [false, false, false, true, true, false]
-                    Arguments.of(16, 4, 2, 6, 100, 100, false, new HashSet<Integer>(Arrays.asList(2, 3, 5, 10))), //Test ID 20: [true, false, true, false, false, false]
-                    Arguments.of(4, 10, 10, 10, 537, 537, false, new HashSet<Integer>(Arrays.asList(2, 3, 5, 7, 9))), //Test ID 6: [false, false, true, true, false, false]
-                    Arguments.of(10, 6, 4, 4, 1611, 1611, true, new HashSet<Integer>(Arrays.asList(2, 3, 5, 7, 8))) //Test ID 22: [true, false, true, true, false, true]
-// The program cannot find the input that satisfy this test requirement. This could mean that this requirement is infeasible.Test ID 7: [false, false, true, true, true, true]
+                    Arguments.of(11, 20, 4, 4, 1248, 1248, false, new HashSet<Integer>(Arrays.asList(2,3,5,7,9))), //Test ID 9: [false, true, false, false, true, false]
 // The program cannot find the input that satisfy this test requirement. This could mean that this requirement is infeasible.Test ID 11: [false, true, false, true, true, true]
+                    Arguments.of(25, 9, 10, 12, 2052, 2052, false, new HashSet<Integer>(Arrays.asList(2,3,5,10))), //Test ID 12: [false, true, true, false, false, false]
+                    Arguments.of(27, 11, 11, 11, 903, 903, true, new HashSet<Integer>(Arrays.asList(2,3,5,7,8))) //Test ID 13: [false, true, true, false, true, true]
             );
         }
     }

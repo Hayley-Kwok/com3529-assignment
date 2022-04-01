@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class InvalidTriangleWithCoveredBranchTest {
+public class InvalidTriangleWithCoveredBranchTest { 
     // Majors: [(side1 + side2 <= side3)]
     // Restricted Test Indices: [0, 1]
     // Correlated Test Indices: [0, 1]
@@ -23,8 +23,8 @@ public class InvalidTriangleWithCoveredBranchTest {
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
                     //TODO add values to the set for expected covered branch
-                    Arguments.of(3, 2, 2, false, new HashSet<Integer>(Arrays.asList(2))), //Test ID 0: [false, false]
-                    Arguments.of(1, 6, 9, true, new HashSet<Integer>(Arrays.asList(1))) //Test ID 1: [true, true]
+                    Arguments.of(7, 1, 4, false, new HashSet<Integer>(Arrays.asList(2))), //Test ID 0: [false, false]
+                    Arguments.of(4, 1, 9, true, new HashSet<Integer>(Arrays.asList(1))) //Test ID 1: [true, true]
             );
         }
     }
