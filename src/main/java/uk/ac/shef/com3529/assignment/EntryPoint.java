@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 
 public class EntryPoint {
     public static void main(String[] args) {
-//        restrictedNotCoveredAllMajorsExample();
+        restrictedNotCoveredAllMajorsExample();
 
-        daysExample();
+//        daysExample();
 //        triangleExamples();
     }
 
@@ -22,6 +22,12 @@ public class EntryPoint {
                 "RandomExample.RestrictedNotCoveringAllMajors(%s, coveredBranches);",
                 restrictedNotCoveredAllMajorsRequirements, false);
         restrictedNotCoveredAllMajorsTestSuite.writeToFile();
+
+        TestSuite restrictedNotCoveredAllMajorsTestSuiteWithBranch = new TestSuite("RestrictedNotCoveringAllMajorsWithCoveredBranch",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.RandomExample;",
+                "RandomExample.RestrictedNotCoveringAllMajors(%s, coveredBranches);",
+                restrictedNotCoveredAllMajorsRequirements, true);
+        restrictedNotCoveredAllMajorsTestSuiteWithBranch.writeToFile();
     }
 
     private static void daysExample() {

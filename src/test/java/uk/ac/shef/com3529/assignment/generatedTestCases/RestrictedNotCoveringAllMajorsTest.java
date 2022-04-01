@@ -15,11 +15,11 @@ public class RestrictedNotCoveringAllMajorsTest {
 
     @ParameterizedTest
     @CsvSource({
-            " 6.298805074828621, 17.704119209181698, 3.362606315476382, false",  //Test ID 0: [false, false, false]
-            " 9.870997815188465, 13.123437479781913, 13.123437479781913, true",  //Test ID 1: [false, true, true]
-            " 13.158854126780495, 13.158854126780495, 13.158854126780495, true",  //Test ID 3: [true, true, true]
+            " 18.92371, 14.1058235, 11.340123, false",  //Test ID 0: [false, false, false]
+            " 6.536007, 14.582566, 14.582566, true",  //Test ID 1: [false, true, true]
+            " 15.36295, 15.36295, 15.36295, true",  //Test ID 3: [true, true, true]
     })
-    public void MCDCTest(double a, double b, double c, boolean expectedBranchResult) {
+    public void MCDCTest(float a, float b, float c, boolean expectedBranchResult) {
         HashSet<Integer> coveredBranches = new HashSet<>();
         boolean actualBranchResult = RandomExample.RestrictedNotCoveringAllMajors(a, b, c, coveredBranches);
         System.out.println(coveredBranches);

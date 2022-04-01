@@ -120,9 +120,9 @@ public class ParsedExamples {
      * (((a == b) && (b == c)) || ((a != b) && (b == c)))
      */
     public static BinaryRelatedNode<?> getRestrictedNotCoveringAllMajors() {
-        SyntaxNode a = new VariableNode<>(Double.class, "a", 0.0, 20.0);
-        SyntaxNode b = new VariableNode<>(Double.class, "b", 0.0, 20.0);
-        SyntaxNode c = new VariableNode<>(Double.class, "c", 0.0, 20.0);
+        SyntaxNode a = new VariableNode<>(Float.class, "a", 0.0f, 20.0f);
+        SyntaxNode b = new VariableNode<>(Float.class, "b", 0.0f, 20.0f);
+        SyntaxNode c = new VariableNode<>(Float.class, "c", 0.0f, 20.0f);
 
         SyntaxNode c1 = new ConditionNode(a, ComparisonRelation.EqualsEquals, b);
         SyntaxNode c2 = new ConditionNode(b, ComparisonRelation.EqualsEquals, c);

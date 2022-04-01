@@ -74,6 +74,9 @@ public class TestCaseWithCoveredBranch extends TestCaseBase {
                 sb.append("                    Arguments.of(");
                 for (Number value : input.getVariableValues()) {
                     sb.append(value);
+                    if (value instanceof Float) {
+                        sb.append("f");
+                    }
                     sb.append(", ");
                 }
 
