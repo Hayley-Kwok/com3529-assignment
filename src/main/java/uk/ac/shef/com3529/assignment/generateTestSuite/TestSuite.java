@@ -18,7 +18,7 @@ public class TestSuite {
     private static final String OutputDirectory = "src/test/java/uk/ac/shef/com3529/assignment/generatedTestCases";
     private static final String FilePath = "/%s.java";
     private static final String ClassDefinition = "public class %s { \n";
-    private static String generatedTestMethodName = "MCDCTest";
+    private static final String generatedTestMethodName = "MCDCTest";
 
     private final String className;
     private final String testFunctionCall;
@@ -37,6 +37,26 @@ public class TestSuite {
             generateCoveredBranchTestCase();
         } else {
             generateParameterizedTestCase();
+        }
+    }
+
+    public void writeToFile() {
+        try {
+            FileWriter writer = new FileWriter(getOutputFilePath());
+            StringBuilder sb = new StringBuilder();
+            sb.append(Package);
+            sb.append(String.join("\n", importString));
+            sb.append("\n\n");
+            sb.append(String.format(ClassDefinition, className));
+            sb.append("    // Majors: " + Arrays.toString(requirements.getMajors()) + "\n");
+            sb.append("    // Restricted Test Indices: " + requirements.getRestrictedTestIndices() + "\n");
+            sb.append("    // Correlated Test Indices: " + requirements.getCorrelatedTestIndices() + "\n\n");
+            sb.append(String.join("\n", testCases));
+            sb.append("}");
+            writer.write(sb.toString());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -78,26 +98,6 @@ public class TestSuite {
             inputs.add(new CsvSourceInput(requirements.getFullConditionTable().get(testIndex), testIndex, values));
         }
         return inputs;
-    }
-
-    public void writeToFile() {
-        try {
-            FileWriter writer = new FileWriter(getOutputFilePath());
-            StringBuilder sb = new StringBuilder();
-            sb.append(Package);
-            sb.append(String.join("\n", importString));
-            sb.append("\n\n");
-            sb.append(String.format(ClassDefinition, className));
-            sb.append("    // Majors: " + Arrays.toString(requirements.getMajors()) + "\n");
-            sb.append("    // Restricted Test Indices: " + requirements.getRestrictedTestIndices() + "\n");
-            sb.append("    // Correlated Test Indices: " + requirements.getCorrelatedTestIndices() + "\n\n");
-            sb.append(String.join("\n", testCases));
-            sb.append("}");
-            writer.write(sb.toString());
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private String getOutputFilePath() {

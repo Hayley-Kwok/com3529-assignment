@@ -68,7 +68,6 @@ public class NumberValuesForInputs {
             }
             counter++;
         } while (!checkIfValuesSatisfyCondition(conditionWithExpectedValues, row.get(row.size() - 1)) && counter < 1000);
-        System.out.println(counter);
         return counter < 1000;
     }
 

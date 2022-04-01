@@ -16,6 +16,15 @@ public class ConditionNode extends BinaryRelatedNode<ComparisonRelation> {
         super(leftNode, relation, rightNode, negation);
     }
 
+    @Override
+    public boolean getResult() {
+        if (resultOverrode) {
+            return result;
+        }
+
+        return flipResult(getNotNegatedResult());
+    }
+
     public boolean getResultOverrode() {
         return resultOverrode;
     }
@@ -31,12 +40,18 @@ public class ConditionNode extends BinaryRelatedNode<ComparisonRelation> {
     }
 
     @Override
-    public boolean getResult() {
-        if (resultOverrode) {
-            return result;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o.getClass() != this.getClass()) return false;
+        ConditionNode that = (ConditionNode) o;
+        return result == that.result &&
+                resultOverrode == that.resultOverrode &&
+                super.equals(that);
+    }
 
-        return flipResult(getNotNegatedResult());
+    @Override
+    public int hashCode() {
+        return Objects.hash(relation, leftNode, rightNode, negated, resultOverrode, result);
     }
 
     private boolean getNotNegatedResult() {
@@ -94,20 +109,5 @@ public class ConditionNode extends BinaryRelatedNode<ComparisonRelation> {
                 return leftNodeVal <= rightNodeVal;
         }
         throw new IllegalStateException("there is an error from the ComparisonRelation");
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o.getClass() != this.getClass()) return false;
-        ConditionNode that = (ConditionNode) o;
-        return result == that.result &&
-                resultOverrode == that.resultOverrode &&
-                super.equals(that);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(relation, leftNode, rightNode, negated, resultOverrode, result);
     }
 }

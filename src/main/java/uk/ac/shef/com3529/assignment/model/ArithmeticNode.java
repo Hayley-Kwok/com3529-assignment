@@ -5,7 +5,7 @@ import uk.ac.shef.com3529.assignment.model.enums.ArithmeticRelation;
 import java.util.Objects;
 
 public class ArithmeticNode extends SyntaxNode {
-    protected ArithmeticRelation relation;
+    private final ArithmeticRelation relation;
 
     public ArithmeticNode(SyntaxNode leftNode, ArithmeticRelation relation, SyntaxNode rightNode) {
         this.leftNode = leftNode;
