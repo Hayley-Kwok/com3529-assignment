@@ -23,10 +23,10 @@ public class IsoscelesTriangleWithCoveredBranchTest {
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
                     //TODO add values to the set for expected covered branch
-                    Arguments.of(1, 1, 3, false, new HashSet<Integer>(Arrays.asList(6))), //Test ID 1: [false, false, true, false]
-                    Arguments.of(5, 2, 1, false, new HashSet<Integer>(Arrays.asList(1, 5))), //Test ID 4: [true, false, false, false]
-                    Arguments.of(7, 7, 5, true, new HashSet<Integer>(Arrays.asList(1, 2, 3))), //Test ID 5: [true, false, true, true]
-                    Arguments.of(8, 2, 2, true, new HashSet<Integer>(Arrays.asList(1, 2, 3))) //Test ID 6: [true, true, false, true]
+                    Arguments.of(2, 2, 4, false, new HashSet<Integer>(Arrays.asList(10))), //Test ID 1: [false, false, true, false]
+                    Arguments.of(8, 3, 7, false, new HashSet<Integer>(Arrays.asList(1, 7, 9))), //Test ID 4: [true, false, false, false]
+                    Arguments.of(8, 8, 7, true, new HashSet<Integer>(Arrays.asList(1, 2, 4, 5, 9))), //Test ID 5: [true, false, true, true]
+                    Arguments.of(4, 3, 3, true, new HashSet<Integer>(Arrays.asList(1, 3, 6, 7, 8))) //Test ID 6: [true, true, false, true]
             );
         }
     }

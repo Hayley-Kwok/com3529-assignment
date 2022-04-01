@@ -23,11 +23,11 @@ public class EquilateralTriangleWithCoveredBranchTest {
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
                     //TODO add values to the set for expected covered branch
-                    Arguments.of(2, 5, 7, false, new HashSet<Integer>(Arrays.asList(6))), //Test ID 0: [false, false, false, false]
+                    Arguments.of(1, 6, 8, false, new HashSet<Integer>(Arrays.asList(6))), //Test ID 0: [false, false, false, false]
 // The program cannot find the input that satisfy this test requirement. This could mean that this requirement is infeasible.Test ID 3: [false, true, true, false]
-                    Arguments.of(6, 6, 5, false, new HashSet<Integer>(Arrays.asList(1, 2, 4))), //Test ID 5: [true, false, true, false]
-                    Arguments.of(8, 2, 2, false, new HashSet<Integer>(Arrays.asList(1, 5))), //Test ID 6: [true, true, false, false]
-                    Arguments.of(7, 7, 7, true, new HashSet<Integer>(Arrays.asList(1, 2, 3))) //Test ID 7: [true, true, true, true]
+                    Arguments.of(8, 8, 6, false, new HashSet<Integer>(Arrays.asList(1, 2, 4))), //Test ID 5: [true, false, true, false]
+                    Arguments.of(2, 8, 8, false, new HashSet<Integer>(Arrays.asList(1, 5))), //Test ID 6: [true, true, false, false]
+                    Arguments.of(2, 2, 2, true, new HashSet<Integer>(Arrays.asList(1, 2, 3))) //Test ID 7: [true, true, true, true]
             );
         }
     }

@@ -15,11 +15,11 @@ public class EquilateralTriangleTest {
 
     @ParameterizedTest
     @CsvSource({
-            " 2, 3, 6, false",  //Test ID 0: [false, false, false, false]
+            " 4, 3, 8, false",  //Test ID 0: [false, false, false, false]
             // The program cannot find the input that satisfy this test requirement. This could mean that this requirement is infeasible.Test ID 3: [false, true, true, false]
-            " 4, 4, 7, false",  //Test ID 5: [true, false, true, false]
-            " 8, 7, 7, false",  //Test ID 6: [true, true, false, false]
-            " 3, 3, 3, true",  //Test ID 7: [true, true, true, true]
+            " 9, 9, 7, false",  //Test ID 5: [true, false, true, false]
+            " 6, 9, 9, false",  //Test ID 6: [true, true, false, false]
+            " 5, 5, 5, true",  //Test ID 7: [true, true, true, true]
     })
     public void MCDCTest(int side1, int side2, int side3, boolean expectedBranchResult) {
         HashSet<Integer> coveredBranches = new HashSet<>();

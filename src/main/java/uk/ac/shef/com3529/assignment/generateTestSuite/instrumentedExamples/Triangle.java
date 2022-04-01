@@ -8,19 +8,42 @@ public class Triangle {
         boolean isIsosceles = false;
         if (side1 + side2 > side3) {
             coveredBranches.add(1);
-            if ((side1 == side2) || (side2 == side3)) {
+            if ((side1 == side2)) {
                 coveredBranches.add(2);
-                if ((side1 != side2) || (side2 != side3)) {
+                if (side1 != side2) {
                     coveredBranches.add(3);
                     isIsosceles = true;
                 } else {
                     coveredBranches.add(4);
                 }
+                if (side2 != side3) {
+                    coveredBranches.add(5);
+                    isIsosceles = true;
+                } else {
+                    coveredBranches.add(6);
+                }
             } else {
-                coveredBranches.add(5);
+                coveredBranches.add(7);
+            }
+            if (side2 == side3) {
+                coveredBranches.add(8);
+                if (side1 != side2) {
+                    coveredBranches.add(3);
+                    isIsosceles = true;
+                } else {
+                    coveredBranches.add(4);
+                }
+                if (side2 != side3) {
+                    coveredBranches.add(5);
+                    isIsosceles = true;
+                } else {
+                    coveredBranches.add(6);
+                }
+            } else {
+                coveredBranches.add(9);
             }
         } else {
-            coveredBranches.add(6);
+            coveredBranches.add(10);
         }
         return isIsosceles;
     }

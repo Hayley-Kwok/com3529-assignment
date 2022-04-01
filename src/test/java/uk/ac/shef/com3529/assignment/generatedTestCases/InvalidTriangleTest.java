@@ -15,8 +15,8 @@ public class InvalidTriangleTest {
 
     @ParameterizedTest
     @CsvSource({
-            " 7, 7, 5, false",  //Test ID 0: [false, false]
-            " 1, 3, 9, true",  //Test ID 1: [true, true]
+            " 9, 2, 5, false",  //Test ID 0: [false, false]
+            " 1, 4, 6, true",  //Test ID 1: [true, true]
     })
     public void MCDCTest(int side1, int side2, int side3, boolean expectedBranchResult) {
         HashSet<Integer> coveredBranches = new HashSet<>();

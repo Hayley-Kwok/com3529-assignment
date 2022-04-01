@@ -23,8 +23,8 @@ public class InvalidTriangleWithCoveredBranchTest {
         public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
             return Stream.of(
                     //TODO add values to the set for expected covered branch
-                    Arguments.of(6, 3, 8, false, new HashSet<Integer>(Arrays.asList(2))), //Test ID 0: [false, false]
-                    Arguments.of(4, 3, 7, true, new HashSet<Integer>(Arrays.asList(1))) //Test ID 1: [true, true]
+                    Arguments.of(3, 2, 2, false, new HashSet<Integer>(Arrays.asList(2))), //Test ID 0: [false, false]
+                    Arguments.of(1, 6, 9, true, new HashSet<Integer>(Arrays.asList(1))) //Test ID 1: [true, true]
             );
         }
     }

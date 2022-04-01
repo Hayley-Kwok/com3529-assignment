@@ -15,10 +15,10 @@ public class IsoscelesTriangleTest {
 
     @ParameterizedTest
     @CsvSource({
-            " 1, 1, 4, false",  //Test ID 1: [false, false, true, false]
-            " 5, 7, 4, false",  //Test ID 4: [true, false, false, false]
-            " 3, 3, 5, true",  //Test ID 5: [true, false, true, true]
-            " 8, 7, 7, true",  //Test ID 6: [true, true, false, true]
+            " 3, 3, 7, false",  //Test ID 1: [false, false, true, false]
+            " 9, 7, 9, false",  //Test ID 4: [true, false, false, false]
+            " 6, 6, 4, true",  //Test ID 5: [true, false, true, true]
+            " 1, 4, 4, true",  //Test ID 6: [true, true, false, true]
     })
     public void MCDCTest(int side1, int side2, int side3, boolean expectedBranchResult) {
         HashSet<Integer> coveredBranches = new HashSet<>();
