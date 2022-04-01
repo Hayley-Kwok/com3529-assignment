@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 
 public class EntryPoint {
     public static void main(String[] args) {
-//        restrictedNotCoveredAllMajorsExample();
+        restrictedNotCoveredAllMajorsExample();
         bmiExample();
-//        daysExample();
-//        triangleExamples();
+        daysExample();
+        triangleExamples();
     }
 
     private static void bmiExample() {
