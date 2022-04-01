@@ -11,8 +11,8 @@ public class EntryPoint {
     public static void main(String[] args) {
 //        restrictedNotCoveredAllMajorsExample();
 
-//        daysExample();
-        triangleExamples();
+        daysExample();
+//        triangleExamples();
     }
 
     private static void restrictedNotCoveredAllMajorsExample() {
@@ -31,6 +31,12 @@ public class EntryPoint {
                 "Calendar.daysBetweenTwoDates(%s, coveredBranches);",
                 daysRequirement, false);
         dayBetweenTwoDatesTestSuite.writeToFile();
+
+        TestSuite dayBetweenTwoDatesTestSuitWithBranch = new TestSuite("DayBetweenTwoDatesWithCoveredBranch",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Calendar;",
+                "Calendar.daysBetweenTwoDates(%s, coveredBranches);",
+                daysRequirement, true);
+        dayBetweenTwoDatesTestSuitWithBranch.writeToFile();
     }
 
 
