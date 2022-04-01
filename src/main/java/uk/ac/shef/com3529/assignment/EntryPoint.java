@@ -9,9 +9,10 @@ import java.util.stream.Collectors;
 
 public class EntryPoint {
     public static void main(String[] args) {
-        restrictedNotCoveredAllMajorsExample();
+//        restrictedNotCoveredAllMajorsExample();
 
-        daysExample();
+//        daysExample();
+        triangleExamples();
     }
 
     private static void restrictedNotCoveredAllMajorsExample() {
@@ -33,7 +34,7 @@ public class EntryPoint {
     }
 
 
-    private static void TriangleExamples() {
+    private static void triangleExamples() {
         TestRequirements isoscelesRequirements = generateTestRequirements(ParsedExamples.getIsoscelesPractical());
         TestSuite isoscelesTestSuite = new TestSuite("IsoscelesTriangle",
                 "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.Triangle;",
