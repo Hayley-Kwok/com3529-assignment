@@ -7,6 +7,9 @@ import uk.ac.shef.com3529.assignment.model.VariableNode;
 import java.util.HashSet;
 import java.util.function.Consumer;
 
+/**
+ * help to find all variableNode & Condition node of the given root node
+ */
 public class NodeHelper {
     private final HashSet<VariableNode<?>> variablesSet = new HashSet<>();
     private final HashSet<ConditionNode> conditions = new HashSet<>();

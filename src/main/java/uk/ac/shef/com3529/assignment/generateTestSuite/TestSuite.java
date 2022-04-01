@@ -12,7 +12,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
-//1 TestRequirement -> 1 Branch Predicate -> 1 TestCase
+//1 TestRequirements -> 1 Branch Predicate -> 1 TestSuite -> 1 TestCase with many parameters value that satisfy corresponding test requirement
+
+/**
+ * The "root" of part 2; Responsible for generating a test file
+ */
 public class TestSuite {
     private static final String Package = "package uk.ac.shef.com3529.assignment.generatedTestCases;\n\n";
     private static final String OutputDirectory = "src/test/java/uk/ac/shef/com3529/assignment/generatedTestCases";

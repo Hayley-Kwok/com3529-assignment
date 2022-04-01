@@ -15,6 +15,9 @@ public class EntryPoint {
         triangleExamples();
     }
 
+    /**
+     * bmi example from lab
+     */
     private static void bmiExample() {
         TestRequirements bmiUnderweightRequirements = generateTestRequirements(ParsedExamples.getBmiUnderweight());
         TestSuite bmiUnderweight = new TestSuite("BMIUnderWeight",
@@ -69,6 +72,9 @@ public class EntryPoint {
         bmiObeseWithBranch.writeToFile();
     }
 
+    /**
+     * A node that the restricted mcdc cannot cover all majors
+     */
     private static void restrictedNotCoveredAllMajorsExample() {
         TestRequirements restrictedNotCoveredAllMajorsRequirements = generateTestRequirements(ParsedExamples.getRestrictedNotCoveringAllMajors());
         TestSuite restrictedNotCoveredAllMajorsTestSuite = new TestSuite("RestrictedNotCoveringAllMajors",
@@ -84,6 +90,9 @@ public class EntryPoint {
         restrictedNotCoveredAllMajorsTestSuiteWithBranch.writeToFile();
     }
 
+    /**
+     * calendar example from lab
+     */
     private static void daysExample() {
         TestRequirements daysRequirement = generateTestRequirements(ParsedExamples.getDaysBetweenTwoDates());
         TestSuite dayBetweenTwoDatesTestSuite = new TestSuite("DayBetweenTwoDates",
@@ -99,6 +108,9 @@ public class EntryPoint {
         dayBetweenTwoDatesTestSuitWithBranch.writeToFile();
     }
 
+    /**
+     * Triangle example from lab
+     */
     private static void triangleExamples() {
         TestRequirements isoscelesRequirements = generateTestRequirements(ParsedExamples.getIsoscelesPractical());
         TestSuite isoscelesTestSuite = new TestSuite("IsoscelesTriangle",
@@ -153,6 +165,9 @@ public class EntryPoint {
         invalidTestSuiteWithBranch.writeToFile();
     }
 
+    /**
+     * Create testRequirement of the given node and print out useful information about the test requirement
+     */
     private static TestRequirements generateTestRequirements(BinaryRelatedNode<?> root) {
         TestRequirements requirements = new TestRequirements(root);
         System.out.println("--------------------------------------------------------------------------------------------------------------------------------");

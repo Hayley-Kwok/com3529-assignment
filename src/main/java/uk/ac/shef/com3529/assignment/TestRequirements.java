@@ -62,6 +62,16 @@ public class TestRequirements {
         return removedContradictingConditions;
     }
 
+    /**
+     * Return the full condition table of the branch predicate. Just like the complete multiple condition table in week 3 practical
+     * Each column except the last corresponds to the T/F value of the major in majors. The last column correspond to the branch predicate.
+     * Eg:
+     * majors[0], majors[1], branch predicate
+     * [ [true,      false, true],
+     * [false,     false, true]]
+     *
+     * @return the complete multi condition table of the given root
+     */
     public ArrayList<ArrayList<Boolean>> getFullConditionTable() {
         if (fullConditionTable != null) {
             return fullConditionTable;
@@ -79,6 +89,9 @@ public class TestRequirements {
         return fullConditionTable;
     }
 
+    /**
+     * return a subset of the fullConditionTable with just tests that satisfy restricted MCDC
+     */
     public ArrayList<ArrayList<Boolean>> getRestrictedMCDCConditionTable() {
         if (restrictedConditionTable != null) {
             return restrictedConditionTable;
@@ -91,6 +104,9 @@ public class TestRequirements {
         return restrictedConditionTable;
     }
 
+    /**
+     * get the indices in the fullConditionTable of the tests that satisfy restricted mcdc
+     */
     public ArrayList<Integer> getRestrictedTestIndices() {
         if (restrictedTestIndices != null) {
             return restrictedTestIndices;
@@ -125,6 +141,9 @@ public class TestRequirements {
         return restrictedTestIndices;
     }
 
+    /**
+     * return a subset of the fullConditionTable with just tests that satisfy correlated MCDC
+     */
     public ArrayList<ArrayList<Boolean>> getCorrelatedMCDCConditionTable() {
         if (correlatedConditionTable != null) {
             return correlatedConditionTable;
@@ -137,6 +156,9 @@ public class TestRequirements {
         return correlatedConditionTable;
     }
 
+    /**
+     * get the indices in the fullConditionTable of the tests that satisfy correlated mcdc
+     */
     public ArrayList<Integer> getCorrelatedTestIndices() {
         if (correlatedTestIndices != null) {
             return correlatedTestIndices;
@@ -322,6 +344,9 @@ public class TestRequirements {
         majorSet.toArray(majors);
     }
 
+    /**
+     * Return nodes with the required relation in set
+     */
     private HashSet<ConditionNode> getSubsetConditionNodes(HashSet<ConditionNode> set, ComparisonRelation relation) {
         return set.stream().filter(n -> n.getRelation().equals(relation)).
                 collect(Collectors.toCollection(HashSet::new));
@@ -409,6 +434,4 @@ public class TestRequirements {
             }
         }
     }
-
-
 }

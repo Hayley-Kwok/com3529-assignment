@@ -7,24 +7,24 @@ to run all of my tests. I have also tested running everything on the IntelliJ in
 
 I have assumed that the imaginary parser will generate the branch predicate into one root node that has the type
 of `BinaryRelatedNode`. All the root nodes for the subjects under tests are in the `ParsedExamples.java`. It is assumed
-that node are generated correctly in a similar way like the ones in `ParsedExamples.java`.<br><br>
+that all nodes are generated correctly in a similar way like the ones in `ParsedExamples.java`.<br><br>
 I have also assumed that there will be an instrumented version of the program of the subjects under tests that is
 constructed in a way
 like `src/main/java/uk/ac/shef/com3529/assignment/generateTestSuite/instrumentedExamples/Triangle.java` that one branch
 predicate correspond to one method that will return true/false for the overall branch predicate result. It will also
-take in a `HashSet<Integer>` that record the branches that the given input has covered. The last assumption on these
+take in a `HashSet<Integer>` to record the branches that the given input has covered. The last assumption on these
 instrumented method is that the order of input parameters are ordered alphabetically. <br> <br>
 
 # Entry Point of this assignment
 
 This entire package only have one main method which is in the `EntryPoint.java`. It has different static method that
-will contract the test requirements and instruct the generation of test cases for different subjects.  <br><br>
+will construct the test requirements and instruct the generation of test cases for different subjects.  <br><br>
 
 # Data Structure for the branch predicate
 
 The data structure for the branch predicate is something similar to a "Syntax Tree". I have taken inspirations from the
-abstract syntax tree from the C# side of the Roslyn (.NET Compiler Platform) because of my previous experience with
-Roslyn. The overall data structure can be described by the following not strictly constructed UML graph.
+abstract syntax tree from the C# side of Roslyn (.NET Compiler Platform) because of my previous experience. The overall
+data structure can be described by the following UML diagram.
 
 ![UML graph for tree](testing_assignment.drawio.png)
 The NOT relation is represented by the negated field in the `BinaryRelatedNode`
@@ -37,8 +37,8 @@ file. <br>
 
 The output type of this part will be `TestRequirements` which contains the information for the restricted & correlated
 MCDC and all the information needed for part 2 of the assignment. <br>
-The `print` statements in the `EntryPoint.java` shows the information that I think it's quite important for this part of
-the assignment.
+The `print` statements in `EntryPoint.java` shows the information that I think it's quite important for this part of the
+assignment.
 <br><br>
 
 # Part 2 of the assignment
@@ -48,13 +48,14 @@ The code for this part are mostly in the `generatedTestSuite` package. <br>
 ## `instrumentedExample` folder
 
 This folder consist of the manually instrumented version of the subject under tests. I have used the `Triangle`
-, `Calendar` from the lab as a subject for testing. For these instrumented version, they have a coveredBranch set to
-show that which branch is being covered and can be used for the generated Unit test. <br>
+, `Calendar` and `Bmi` from the lab as a subject for testing. For these instrumented version, they have a coveredBranch
+set to show that which branch is being covered and can be used for the generated Unit test. I have also created an extra
+object (`RandomExample`) that the restricted MCDC cannot cover all the majors for testing.<br>
 
 ## Generating Test Suite
 
-The "root" class for this part of the assignment is `TestSuite.java`. It takes in a `TestRequirements` object and has
-one public method `writeToFile` that will write all the testcases corresponds to the restricted & correlated MCDC of the
+The "root" class for this part of the assignment is `TestSuite`. It takes in a `TestRequirements` object and has one
+public method `writeToFile` that will write all the testcases corresponds to the restricted & correlated MCDC of the
 input `TestRequirement` into the filepath specified in the input parameters of the constructor. <br>
 
 There are two type of test cases that can be generated, `ParameterizedTestCase` and `TestCaseWithCoverBranch`. The
@@ -64,12 +65,12 @@ program will decide which one to generate based on the `generateCoverBranchField
 
 `ParameterizedTestCase` will only generate tests that assert if the overall branch predicate (the boolean returned by
 the instrumented method) is the same as the expected branch predicate result. The examples of these generated tests are
-test files that don't have "WithCoverBranch" in their filename in the `test\generatedTestCases` <br>
+test files in `test\generatedTestCases` that don't have "WithCoverBranch" in their filename. <br>
 
 ### TestCaseWithCoverBranch
 
 `TestCaseWithCoverBranch` will generate an addition field for the `expectedCoveredBranches` for the input of the JUnit
-test. **This type of tests requires the input from the developers to see which branch is expected to be covered for that
+test. **This type of tests requires the input from the developer to see which branch is expected to be covered for that
 particular test requirement.** The examples of these generated tests are appended with "WithCoverBranch" in
 the `test\generatedTestCases` folder. In these examples, I have added "the input from the developer" (the values
 for `expectedCoveredBranches`)<br>
@@ -83,13 +84,13 @@ value of the input type.
 
 # Test Package
 
-This folder consists of tests in two categories. <br>
+The test folder consists of tests in two categories. <br>
 
 ## Generated Tests (`generatedTestCases` Package)
 
 These are the test cases automatically generated by the program for part 2 of the assignment. The code that instruct the
 creation of these tests are in `src/main/java/uk/ac/shef/com3529/assignment/EntryPoint.java`. <br>
-More details of these tests are in `src/main/java/uk/ac/shef/com3529/assignment/Readme.md`.
+More details of these tests can be found in part 2 description or the `EntryPoint.java`.
 
 ## Rest of the tests
 

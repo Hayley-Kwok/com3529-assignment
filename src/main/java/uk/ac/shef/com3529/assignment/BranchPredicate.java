@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ * help to find the overall branch predicate of the given root node
+ */
 public class BranchPredicate {
 
     private final ConditionNode[] majors;
@@ -29,7 +32,6 @@ public class BranchPredicate {
 
     public boolean getResult() {
         allConditions.forEach(ConditionNode::resetResultOverrode);
-//        updateNonMajors();
         return root.getResult();
     }
 

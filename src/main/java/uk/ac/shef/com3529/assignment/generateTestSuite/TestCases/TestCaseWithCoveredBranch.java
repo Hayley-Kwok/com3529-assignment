@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class TestCaseWithCoveredBranch extends TestCaseBase {
-
     private static final String argumentProviderName = "TestArgumentsProvider";
 
     public TestCaseWithCoveredBranch(HashSet<String> importString, VariableNode<?>[] variables, String methodName, ArrayList<CsvSourceInput> inputValues, String testFunctionCall) {
@@ -26,7 +25,6 @@ public class TestCaseWithCoveredBranch extends TestCaseBase {
         importString.add("import org.junit.jupiter.params.provider.Arguments;");
         importString.add("import org.junit.jupiter.params.provider.ArgumentsProvider;");
         importString.add("import org.junit.jupiter.params.provider.ArgumentsSource;");
-
     }
 
     @Override
@@ -34,7 +32,6 @@ public class TestCaseWithCoveredBranch extends TestCaseBase {
         if (testCaseString != null) {
             return testCaseString;
         }
-
 
         StringBuilder sb = new StringBuilder();
 

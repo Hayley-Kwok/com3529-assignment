@@ -2,6 +2,9 @@ package uk.ac.shef.com3529.assignment.generateTestSuite;
 
 import java.util.ArrayList;
 
+/**
+ * Data object for storing the information for each test case
+ */
 public class CsvSourceInput {
     private final ArrayList<Boolean> truthValues;
     private final int testIndex;

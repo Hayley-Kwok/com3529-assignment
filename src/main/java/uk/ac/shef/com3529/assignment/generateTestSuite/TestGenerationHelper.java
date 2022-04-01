@@ -3,6 +3,12 @@ package uk.ac.shef.com3529.assignment.generateTestSuite;
 import uk.ac.shef.com3529.assignment.model.VariableNode;
 
 public class TestGenerationHelper {
+    /**
+     * generate the signature with the name and type of variables
+     *
+     * @param variables array of variables
+     * @return signature with the name and type of variables
+     */
     public static String generateParametersSignature(VariableNode<?>[] variables) {
         StringBuilder sb = new StringBuilder();
         for (VariableNode<?> variable : variables) {
@@ -15,6 +21,12 @@ public class TestGenerationHelper {
         return sb.toString();
     }
 
+    /**
+     * get the type string of the given type
+     *
+     * @param type one of the type in Number
+     * @return the corresponding type string
+     */
     public static String getTypeString(Class<?> type) {
         if (type.equals(Integer.class)) {
             return "int";
@@ -27,6 +39,12 @@ public class TestGenerationHelper {
         }
     }
 
+    /**
+     * generate the signature with just the name of variables
+     *
+     * @param variables array of variables
+     * @return signature with just the name of variables
+     */
     public static String generateOnlyNameSignature(VariableNode<?>[] variables) {
         StringBuilder sb = new StringBuilder();
         for (VariableNode<?> variable : variables) {

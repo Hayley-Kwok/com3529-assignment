@@ -6,6 +6,9 @@ import uk.ac.shef.com3529.assignment.model.VariableNode;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ * The code that shared between ParameterizedTestCase & TestCaseWithCoveredBranch
+ */
 public abstract class TestCaseBase {
     protected final HashSet<String> importString;
     protected String testCaseString;

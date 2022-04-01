@@ -5,6 +5,9 @@ import uk.ac.shef.com3529.assignment.model.ConditionNode;
 import uk.ac.shef.com3529.assignment.model.VariableNode;
 import uk.ac.shef.com3529.assignment.model.enums.ComparisonRelation;
 
+/**
+ * Data object to facilitate the random value generation for the inputs in test cases
+ */
 public class ConditionWithExpectedValue {
     private final boolean expectedValue;
     private final VariableNode<?>[] involvedVariables;
