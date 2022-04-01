@@ -131,5 +131,45 @@ public class ParsedExamples {
         return new OrNode(new AndNode(c1, c2), new AndNode(c3, c2));
     }
 
+    /**
+     * bmi < 18.5
+     */
+    public static BinaryRelatedNode<?> getBmiUnderweight() {
+        SyntaxNode bmi = new VariableNode<>(Double.class, "bmi", 0.0, 40.0);
 
+        return new ConditionNode(bmi, ComparisonRelation.SmallerThan, new NumericalNode<>(18.5));
+    }
+
+    /**
+     * (bmi >= 18.5) && (bmi < 25)
+     */
+    public static BinaryRelatedNode<?> getBmiNormal() {
+        SyntaxNode bmi = new VariableNode<>(Double.class, "bmi", 16.0, 30.0);
+
+        SyntaxNode c1 = new ConditionNode(bmi, ComparisonRelation.LargerOrEqualsTo, new NumericalNode<>(18.5));
+        SyntaxNode c2 = new ConditionNode(bmi, ComparisonRelation.SmallerThan, new NumericalNode<>(25.0));
+
+        return new AndNode(c1, c2);
+    }
+
+    /**
+     * (bmi >= 25) && (bmi < 30)
+     */
+    public static BinaryRelatedNode<?> getBmiOverweight() {
+        SyntaxNode bmi = new VariableNode<>(Double.class, "bmi", 16.0, 35.0);
+
+        SyntaxNode c1 = new ConditionNode(bmi, ComparisonRelation.LargerOrEqualsTo, new NumericalNode<>(25.0));
+        SyntaxNode c2 = new ConditionNode(bmi, ComparisonRelation.SmallerThan, new NumericalNode<>(30.0));
+
+        return new AndNode(c1, c2);
+    }
+
+    /**
+     * bmi >= 30
+     */
+    public static BinaryRelatedNode<?> getBmiObese() {
+        SyntaxNode bmi = new VariableNode<>(Double.class, "bmi", 16.0, 50.0);
+
+        return new ConditionNode(bmi, ComparisonRelation.LargerOrEqualsTo, new NumericalNode<>(30.0));
+    }
 }

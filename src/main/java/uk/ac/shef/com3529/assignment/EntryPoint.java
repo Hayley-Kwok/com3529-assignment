@@ -9,10 +9,64 @@ import java.util.stream.Collectors;
 
 public class EntryPoint {
     public static void main(String[] args) {
-        restrictedNotCoveredAllMajorsExample();
-
+//        restrictedNotCoveredAllMajorsExample();
+        bmiExample();
 //        daysExample();
 //        triangleExamples();
+    }
+
+    private static void bmiExample() {
+        TestRequirements bmiUnderweightRequirements = generateTestRequirements(ParsedExamples.getBmiUnderweight());
+        TestSuite bmiUnderweight = new TestSuite("BMIUnderWeight",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.BMI;",
+                "BMI.underWeight(%s, coveredBranches);",
+                bmiUnderweightRequirements, false);
+        bmiUnderweight.writeToFile();
+
+        TestSuite bmiUnderweightWithBranch = new TestSuite("BMIUnderWeightWithCoveredBranch",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.BMI;",
+                "BMI.underWeight(%s, coveredBranches);",
+                bmiUnderweightRequirements, true);
+        bmiUnderweightWithBranch.writeToFile();
+
+        TestRequirements bmiNormalRequirements = generateTestRequirements(ParsedExamples.getBmiNormal());
+        TestSuite bmiNormal = new TestSuite("BMINormal",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.BMI;",
+                "BMI.normal(%s, coveredBranches);",
+                bmiNormalRequirements, false);
+        bmiNormal.writeToFile();
+
+        TestSuite bmiNormalWithBranch = new TestSuite("BMINormalWithCoveredBranch",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.BMI;",
+                "BMI.normal(%s, coveredBranches);",
+                bmiNormalRequirements, true);
+        bmiNormalWithBranch.writeToFile();
+
+        TestRequirements bmiOverweightRequirements = generateTestRequirements(ParsedExamples.getBmiOverweight());
+        TestSuite bmiOverweight = new TestSuite("BMIOverweight",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.BMI;",
+                "BMI.overweight(%s, coveredBranches);",
+                bmiOverweightRequirements, false);
+        bmiOverweight.writeToFile();
+
+        TestSuite bmiOverweightWithBranch = new TestSuite("BMIOverweightWithCoveredBranch",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.BMI;",
+                "BMI.overweight(%s, coveredBranches);",
+                bmiOverweightRequirements, true);
+        bmiOverweightWithBranch.writeToFile();
+
+        TestRequirements bmiObeseRequirements = generateTestRequirements(ParsedExamples.getBmiObese());
+        TestSuite bmiObese = new TestSuite("BMIObeseweight",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.BMI;",
+                "BMI.obese(%s, coveredBranches);",
+                bmiObeseRequirements, false);
+        bmiObese.writeToFile();
+
+        TestSuite bmiObeseWithBranch = new TestSuite("BMIObeseWithCoveredBranch",
+                "import uk.ac.shef.com3529.assignment.generateTestSuite.instrumentedExamples.BMI;",
+                "BMI.obese(%s, coveredBranches);",
+                bmiObeseRequirements, true);
+        bmiObeseWithBranch.writeToFile();
     }
 
     private static void restrictedNotCoveredAllMajorsExample() {
@@ -44,7 +98,6 @@ public class EntryPoint {
                 daysRequirement, true);
         dayBetweenTwoDatesTestSuitWithBranch.writeToFile();
     }
-
 
     private static void triangleExamples() {
         TestRequirements isoscelesRequirements = generateTestRequirements(ParsedExamples.getIsoscelesPractical());

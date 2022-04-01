@@ -72,16 +72,18 @@ public class ConditionNode extends BinaryRelatedNode<ComparisonRelation> {
             }
         }
 
-        // both node can only be ArithmeticNode or VariableNode. The rest scenario are:
+        // both node can only be ArithmeticNode or VariableNode or NumericalNode. The rest scenario are:
         // case 2: both are ArithmeticNode
         // case 3: both are VariableNode
-        // case 4: one of them is ArithmeticNode & one is VariableNode
+        // case 4: they are not the same type and is one of these types: ArithmeticNode or VariableNode or NumericalNode
 
         double leftNodeVal;
         double rightNodeVal;
 
         if (leftNode instanceof ArithmeticNode) {
             leftNodeVal = ((ArithmeticNode) leftNode).getResult();
+        } else if (leftNode instanceof NumericalNode<?>) {
+            leftNodeVal = ((NumericalNode<?>) leftNode).getValue().doubleValue();
         } else {
             // have to cast the number value to a concrete number type. have chosen double here as it can represent most
             // of the number value in Java
@@ -90,6 +92,8 @@ public class ConditionNode extends BinaryRelatedNode<ComparisonRelation> {
 
         if (rightNode instanceof ArithmeticNode) {
             rightNodeVal = ((ArithmeticNode) rightNode).getResult();
+        } else if (rightNode instanceof NumericalNode<?>) {
+            rightNodeVal = ((NumericalNode<?>) rightNode).getValue().doubleValue();
         } else {
             rightNodeVal = ((VariableNode<?>) rightNode).getValue().doubleValue();
         }

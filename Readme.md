@@ -1,7 +1,7 @@
 # How to install & Run the Project
 
-I have developed all of these in IntelliJ. This is a maven project which I have tried running `mvn test` and it did
-manage to run all of my tests. I have also tested running everything on the IntelliJ in the diamond machine. <br>
+I have developed all code in IntelliJ. This is a maven project which I have tried running `mvn test` and it did manage
+to run all of my tests. I have also tested running everything on the IntelliJ in the diamond machine. <br>
 
 # Assumptions
 
@@ -23,8 +23,8 @@ will contract the test requirements and instruct the generation of test cases fo
 # Data Structure for the branch predicate
 
 The data structure for the branch predicate is something similar to a "Syntax Tree". I have taken inspirations from the
-abstract syntax tree from the C# side of the Roslyn (.NET Compiler Platform) purely because of my previous experience
-with Roslyn. The overall data structure can be described by the following not strictly constructed UML graph.
+abstract syntax tree from the C# side of the Roslyn (.NET Compiler Platform) because of my previous experience with
+Roslyn. The overall data structure can be described by the following not strictly constructed UML graph.
 
 ![UML graph for tree](testing_assignment.drawio.png)
 The NOT relation is represented by the negated field in the `BinaryRelatedNode`

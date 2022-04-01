@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class NumberValuesForInputs {
+    private static final int numberOfTry = 1000;
     private final VariableNode<?>[] variables;
     private final HashSet<ConditionNode> allConditions;
     private final ConditionNode[] majors;
@@ -67,8 +68,8 @@ public class NumberValuesForInputs {
                 variable.setValue(number);
             }
             counter++;
-        } while (!checkIfValuesSatisfyCondition(conditionWithExpectedValues, row.get(row.size() - 1)) && counter < 1000);
-        return counter < 1000;
+        } while (!checkIfValuesSatisfyCondition(conditionWithExpectedValues, row.get(row.size() - 1)) && counter < numberOfTry);
+        return counter < numberOfTry;
     }
 
     private ArrayList<ConditionWithExpectedValue> generateConditionWithExpectedValues(ArrayList<Boolean> row) {
