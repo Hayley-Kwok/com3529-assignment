@@ -9,10 +9,12 @@ import java.util.stream.Collectors;
 
 public class EntryPoint {
     public static void main(String[] args) {
-        restrictedNotCoveredAllMajorsExample();
-        bmiExample();
-        daysExample();
-        triangleExamples();
+//        restrictedNotCoveredAllMajorsExample();
+//        bmiExample();
+//        daysExample();
+//        triangleExamples();
+        Isabelle isabelle = new Isabelle();
+        isabelle.SanityCheckHashSet();
     }
 
     /**
